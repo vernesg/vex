@@ -413,15 +413,20 @@
     height: 30px;
     
 }
+.logout {
+    font-size: 12px;
+    color: white;
+    margin-right: 40px;
+}
 
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-text">RYUKO V5</div>
-        <div class="robot-icon"></div>
+        <a class="logout" href="/">log out</a>
     </div>
-
+    
     <div class="container">
 
                     <img class="icon-main"src="https://i.imgur.com/izqhFnb.jpeg" alt="Program"/>
@@ -460,6 +465,7 @@
                autobot - To the owner</br>
                design - Jay Mar & Ryuko
             </p>
+            
             </div>
             <div class="create-container">
                 <div class="row">
@@ -505,7 +511,7 @@
         </div>
 
     <script>
-
+        
         async function listBots() {
             const elm = document.getElementById("listsofbots");
             try {
