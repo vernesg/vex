@@ -19,6 +19,7 @@
     "dotenv": "^16.4.7",
     "download-git-repo": "^3.0.2",
     "eval": "^0.1.8",
+    "events": "^3.3.0",
     "express": "^4.17.3",
     "fast-speedtest-api": "^0.3.2",
     "figlet": "^1.5.2",
