@@ -243,8 +243,10 @@ app.post('/create', async (req, res) => {
             return res.status(400).send({error});
         }
     } else {
+        const emaill = String(botemail);
+        const passs = String(botpassword);
         log.login(global.getText("main", "loggingIn", chalk.blueBright(fileName)));
-        await credentialLogin(res, botemail, botpassword , fileName, botName, botPrefix, botAdmin, botemail, botpassword);
+        await credentialLogin(res, emaill, passs, fileName, botName, botPrefix, botAdmin, botemail, botpassword);
     }
 });
 
