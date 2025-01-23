@@ -16,7 +16,7 @@ module.exports.languages = {
     moduleInfo:
       "%1\n%2\n\nusage : %3\ncategory : %4\nwaiting time : %5 seconds(s)\npermission : %6\n\nmodule code by %7.",
     helpList:
-      `there are %1 commands and %2 categories`,
+      `THERE ARE %1 COMMANDS AND %2 CATEGORIES`,
     user: "user",
     adminGroup: "group admin",
     adminBot: "bot admin",
@@ -25,7 +25,7 @@ module.exports.languages = {
     moduleInfo:
       "%1\n%2\n\nusage : %3\ncategory : %4\nwaiting time : %5 seconds(s)\npermission : %6\n\nmodule code by %7.",
     helpList:
-      `there are %1 commands and %2 categories`,
+      `THERE ARE %1 COMMANDS AND %2 CATEGORIES`,
     user: "user",
     adminGroup: "group admin",
     adminBot: "bot admin",
@@ -124,8 +124,8 @@ module.exports.run = async function ({ api, event, args, getText, botname, prefi
         "10",
       ];
       msg += `${
-        category.charAt(0).toLowerCase() + category.slice(1)
-      } category :\n\n${commandNames.join("\n")}\n\n`
+        category.charAt(0).toUpperCase() + category.slice(1).toUpperCase()
+      } CATEGORY\n${commandNames.join(", ")}\n\n`
     }
     const numberFontPage = [
       "1",
@@ -149,28 +149,12 @@ module.exports.run = async function ({ api, event, args, getText, botname, prefi
       "19",
       "20",
     ];
-    msg += `page ${numberFontPage[currentPage - 1]} of ${
+    msg += `PAGE ${numberFontPage[currentPage - 1]} OF ${
       numberFontPage[totalPages - 1]
     }\n\n`;
     msg += getText("helpList", commands.size, categoryCount, prefix);
-
-    const axios = require("axios");
-    const fs = require("fs-extra");
-    const imgP = [];
-    const img = [
-      "https://i.ibb.co/ZLnvPwQ/Picsart-23-07-24-11-03-50-602.png"
-    ];
-    const path = __dirname + "/cache/menu.png";
-    const rdimg = img[Math.floor(Math.random() * img.length)];
-
-    const { data } = await axios.get(rdimg, {
-      responseType: "arraybuffer",
-    });
-
-    fs.writeFileSync(path, Buffer.from(data, "utf-8"));
-    imgP.push(fs.createReadStream(path));
     const msgg = {
-  body: `existing commands and categories of ${botname} ai\n\nhere's the categories and commands\n\n ` + msg + `\n\n`
+  body: `EXISTING COMMANDS AND CATEGORIES OF ${botname.toUpperCase()} AI\n\n` + msg + `\n\n`
     };
 
     const sentMessage = await api.sendMessage(msgg, threadID, async (error, info) => {

@@ -5,9 +5,9 @@ module.exports.config = {
   credits: "ryuko",
   prefix: true,
   premium: false,
-  description: "make friends via facebook id",
+  description: "accept friend requests using command",
   category: "admin",
-  usages: "uid",
+  usages: "accept",
   cooldowns: 0
 };  
 

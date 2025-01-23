@@ -16,20 +16,15 @@ module.exports.config = {
 const axios = require('axios');
 module.exports.run = async function ({api, event, args}) {
     const ask = args.join(" ");
-    function message(data) {
-        api.sendMesage(data, event.threadID)
-    }
-    function reply(data) {
-        api.sendMesage(data, event.threadID, event.messageID)
-    }
+    
     if (!ask) {
-        return reply(`please provide a message`);
+        return api.sendMessage(`please provide a message`, event.threadID, event.messageID);
     }
     try {
-        const res = await axios.get(`http://sgp1.hmvhostings.com:25721/gemini?question=${ask}`);
-        const message = res.data.answer;
-        return reply(answer);
+        const res = await axios.get(`https://kaiz-apis.gleeze.com/api/gemini-pro?q=${ask}&uid=${event.senderID}`);
+        const message = res.data.response;
+        return api.sendMessage(message, event.threadID, event.messageID);
     } catch (err) {
-        return reply(`can't fetch api key.`);
+        return api.sendMessage(`can't fetch api key.`, event.threadID, event.messageID);
     }
 }

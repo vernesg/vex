@@ -1,12 +1,11 @@
 console.clear();
 const { spawn } = require("child_process");
 const chalk = require('chalk');
-const logger = require("./main/utility/logs.js");
 const fs = require('fs-extra')
 const path = require('path');
 
 function startBot(message) {
-    (message) ? console.log(chalk.blue(message.toUpperCase())) : "";
+    (message) ? console.info(chalk.blue(message.toUpperCase())) : "";
 
   const child = spawn("node", ["--trace-warnings", "--async-stack-traces", "--no-warnings", "main.js"], {
         cwd: __dirname,
@@ -22,7 +21,7 @@ function startBot(message) {
     });
 
   child.on("error", function(error) {
-    logger("an error occurred : " + JSON.stringify(error), "error");
+    console.error("an error occurred : " + JSON.stringify(error));
   });
 };
 startBot();

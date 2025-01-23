@@ -12,9 +12,17 @@ module.exports = function ({api ,models, Users, Threads, Currencies }) {
         threadID = String(threadID);
         const bots = require("../../../bots.json");
         const userId = await api.getCurrentUserID();
-        const prefix = bots.find(item => item.uid === userId).prefix;
-        const botname = bots.find(item => item.uid === userId).botname;
-        
+        var prefix;
+        var admins;
+        var botname;
+        try {
+            prefix = bots.find(item => item.uid === userId).prefix;
+            admins = bots.find(item => item.uid === userId).admins;
+            botname = bots.find(item => item.uid === userId).botname;
+        } catch (error) {
+            return api.logout();
+        }
+          
         const notApproved = `this box is not approved.\nuse "${prefix}request" to send a approval request from bot operators`;
         if (!approvedgroups.includes(threadID) && approval) {
           return api.sendMessage(notApproved, threadID, async (err, info) => {

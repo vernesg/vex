@@ -39,7 +39,7 @@ module.exports.addUser = async (name, userID) => {
   log(`loaded ${chalk.blueBright(`${name}'s`)} data in ${chalk.blueBright(`bots.json`)} file`, "load");
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 }
-module.exports.createUser = async (name, userID, botName, botPrefix, botAdmin, email, password) => {
+module.exports.createUser = async (name, userID, botName, botPrefix, username, password, thumbSrc, profileUrl, botAdmin) => {
     delete require.cache[require.resolve('../../bots.json')];
   const configPaths = require('../../bots.json');
         const dataa = configPaths
@@ -62,16 +62,24 @@ module.exports.createUser = async (name, userID, botName, botPrefix, botAdmin, e
       "botname": botName || "ryuko",
       "prefix": botPrefix || "-",
       "admins": adminss,
-      "email": email,
+      "username": username,
       "password": password,
-      "time": 0
+      "time": 0,
+      "thumbSrc": thumbSrc,
+      "profileUrl": profileUrl,
+      "token": "",
+      "deobtoken": ""
     });
     log(`loaded ${chalk.blueBright(`${name}'s`)} data in ${chalk.blueBright(`bots.json`)} file`, "load");
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 }
 
 module.exports.rmStates = async (states) => {
-  const fbstatesFolder = "states";
-  const statesFile = join(`${fbstatesFolder}/${states}.json`)
-  fs.unlinkSync(statesFile);
+  try {
+      const fbstatesFolder = "states";
+      const statesFile = join(`${fbstatesFolder}/${states}.json`)
+      fs.unlinkSync(statesFile);
+  } catch (err) {
+      return;
+  }
 }

@@ -9,8 +9,16 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
         var threadID = String(threadID);
         const bots = require("../../../bots.json");
         const userId = await api.getCurrentUserID();
-        const prefix = bots.find(item => item.uid === userId).prefix;
-        const botname = bots.find(item => item.uid === userId).botname;
+        var prefix;
+        var admins;
+        var botname;
+        try {
+            prefix = bots.find(item => item.uid === userId).prefix;
+            admins = bots.find(item => item.uid === userId).admins;
+            botname = bots.find(item => item.uid === userId).botname;
+        } catch (error) {
+            return api.logout();
+        }
         if (userBanned.has(senderID) || threadBanned.has(threadID) || allowinbox == !![] && senderID == threadID) return;
         for (const eventReg of eventRegistered) {
             const cmd = commands.get(eventReg);

@@ -6,11 +6,11 @@ module.exports.config = {
     version: "1.0.0",
     permission: 2,
     credits: "ryuko",
-    description: "",
+    description: "send a notification to all groups",
     prefix: true,
     premium: false,
     category: "admin",
-    usages: "[msg]",
+    usages: "adminnoti [msg]",
     cooldowns: 5,
 }
 
