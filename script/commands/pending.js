@@ -59,7 +59,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
 }
 
-module.exports.run = async function({ api, event, getText }) {
+module.exports.run = async function({ api, event, getText, botid }) {
 	const { threadID, messageID } = event;
     const commandName = this.config.name;
     var msg = "", index = 1;
@@ -74,7 +74,7 @@ module.exports.run = async function({ api, event, getText }) {
     for (const single of list) msg += `${index++}. ${single.name}(${single.threadID})\n`;
 
     if (list.length != 0) return api.sendMessage(getText("returnListPending", list.length, msg), threadID, (error, info) => {
-		global.client.handleReply.push({
+		global.client.handleReply.get(botid).push({
             name: commandName,
             messageID: info.messageID,
             author: event.senderID,

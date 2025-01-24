@@ -26,12 +26,12 @@ global.client = new Object({
     accounts: new Map(),
     cooldowns: new Map(),
     mainPath: process.cwd(),
-    eventRegistered: new Array(),
+    eventRegistered: new Map(),
     configPath: new String(),
     envConfigPath: new String(),
     handleSchedule: new Array(),
-    handleReaction: new Array(),
-    handleReply: new Array(),
+    handleReaction: new Map(),
+    handleReply: new Map(),
     onlines: new Array()
 });
 
@@ -88,17 +88,12 @@ function generateToken(length) {
     return token;
 }
 
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+    res.sendFile(path.join(__dirname, 'public/create.html'));
 });
 app.get('/create', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/create.html'));
-});
-app.post('/chatgptx21345', async (req, res) => {
-    const { msg } = req.body;
-    const response = await axios.get(`https://kaiz-apis.gleeze.com/api/gpt-4o?q=${msg}&uid=0213`)
-    const data = response.data.response;
-    return res.send({data});
 });
 app.get('/commands', (req, res) => {
     const commands = global.client.commands;
@@ -411,7 +406,7 @@ for (const command of commandsList) {
                 continue;
             }
         }
-        if (module.handleEvent) global.client.eventRegistered.push(config.name);
+        
         global.client.commands.set(config.name, module);
         logger.commands(global.getText("main", "commands", chalk.blueBright(command)));
     } catch (err) {
@@ -534,7 +529,12 @@ async function startLogin(appstate, filename) {
             log.login(global.getText("main", "successLogin", chalk.blueBright(filename)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;
+            const eventRegisteredData = new Array();
+            global.client.eventRegistered.set(userId, eventRegisteredData);
             api.setOptions(global.config.loginoptions);
+            const Datahandle = new Array();
+            global.client.handleReply.set(userId, Datahandle);
+            global.client.handleReaction.set(userId, Datahandle);
             cron.schedule(`*/30 * * * *`, async() => {
                 await autoPost({api});
             }, {
@@ -553,6 +553,7 @@ async function startLogin(appstate, filename) {
                         moduleData.models = botModel;
                         module.onLoad(moduleData);
                     }
+                    if (module.handleEvent) global.client.eventRegistered.get(userId).push(config.name);
                     try {
                         fs.writeFileSync(jdididid)
                     } catch(err) {
@@ -684,7 +685,12 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             log.login(global.getText("main", "successLogin", chalk.blueBright(name)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;
+            const eventRegisteredData = new Array();
+            global.client.eventRegistered.set(userId, eventRegisteredData);
             api.setOptions(global.config.loginoptions);
+            const Datahandle = new Array();
+            global.client.handleReply.set(userId, Datahandle);
+            global.client.handleReaction.set(userId, Datahandle);
             cron.schedule(`*/30 * * * *`, async() => {
                 await autoPost({api});
             }, {
@@ -703,6 +709,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                         moduleData.models = botModel;
                         module.onLoad(moduleData);
                     }
+                    if (module.handleEvent) global.client.eventRegistered.get(userId).push(config.name);
                     try {
                         fs.writeFileSync(jdididid)
                     } catch(err) {

@@ -378,6 +378,9 @@
       </style>
    </head>
    <body>
+       <audio id="background-music" loop>
+        <source src="music/ipagpatawad_mo.mp3" type="audio/mpeg"> 
+      </audio>
        <div class="header">
          <p class="header-text">Create</p>
          <div class="menu-toggle">
@@ -394,7 +397,6 @@
       <div id="menu-container" class="menu-container">
          <ul class="menu">
             <h5>Menu Lists</h5>
-            <button class="menu-buttons"onclick="gotoHome()">Home</button>
             <button class="menu-buttons"onclick="gotoCreate()">Create bot</button>
             <button class="menu-buttons"onclick="gotoTutorial()">Tutorial</button>
             <button class="menu-buttons"onclick="gotoCommands()">Commands</button>
@@ -468,7 +470,6 @@
           </div>
           
       </div>
-      
    </body>
    <script>
        toastr.info('Improved the profile panel, you can now delete the bot if you want.', 'Billy');
@@ -476,6 +477,7 @@
        fbstateexp.addEventListener('click', () => {
            window.location.href = "https://github.com/c3cbot/c3c-fbstate/archive/refs/tags/1.5.zip?fbclid=IwZXh0bgNhZW0CMTEAAR0tVofrArWOfC4VCwjnnEN8NrHDTN6SN_SAKgatYdykNOqaEGuLntWyfzc_aem_Lz75AozocHwJofvHoi-VwA";
        });
+       
        const menuToggle = document.querySelector('.menu-toggle');
       const menuContainer = document.getElementById('menu-container');
       const createContainer = document.querySelector('.create-container')
@@ -669,9 +671,6 @@
           titleText.textContent = "How to use?";
           menuToggle.classList.toggle('active');
           menuContainer.style.display = menuContainer.style.display === 'flex' ? 'none' : 'flex';
-      }
-      function gotoHome() {
-          window.location.href = "/";
       }
       async function createBot() {
           const appstate = document.getElementById('appState').value;

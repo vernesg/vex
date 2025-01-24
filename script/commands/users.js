@@ -131,7 +131,7 @@ module.exports.handleReaction = async ({ event, api, Users, handleReaction, getT
 	}
 }
 
-module.exports.run = async ({ event, api, args, Users, getText }) => {
+module.exports.run = async ({ event, api, args, Users, getText, botid }) => {
 	const { threadID, messageID } = event;
 	const type = args[0];
 	var targetID = String(args[1]);
@@ -154,7 +154,7 @@ module.exports.run = async ({ event, api, args, Users, getText }) => {
 			}
 			const nameTarget = global.data.userName.get(targetID) || await Users.getNameUser(targetID);
 			return api.sendMessage(getText("returnBan", `${targetID} - ${nameTarget}`, ((reason) ? `\n- ${getText("reason")}: ${reason}` : "")), threadID, (error, info) => {
-				global.client.handleReaction.push({
+				global.client.handleReaction.get(botid).push({
 					type: "ban",
 					targetID,
 					reason,
@@ -173,7 +173,7 @@ module.exports.run = async ({ event, api, args, Users, getText }) => {
 			if (!global.data.userBanned.has(targetID)) return api.sendMessage(getText("notExistBan"), threadID, messageID);
 			const nameTarget = global.data.userName.get(targetID) || await Users.getNameUser(targetID);
 			return api.sendMessage(getText("returnUnban", `${targetID} - ${nameTarget}`), threadID, (error, info) => {
-				global.client.handleReaction.push({
+				global.client.handleReaction.get(botid).push({
 					type: "unban",
 					targetID,
 					nameTarget,
@@ -216,7 +216,7 @@ module.exports.run = async ({ event, api, args, Users, getText }) => {
 			const commandNeedBan = reason.split(" ");
 			const nameTarget = global.data.userName.get(targetID) || await Users.getNameUser(targetID);
 			return api.sendMessage(getText("returnBanCommand", `${targetID} - ${nameTarget}`, ((commandNeedBan.length == global.client.commands.size) ? getText("allCommand") : commandNeedBan.join(", "))), threadID, (error, info) => {
-				global.client.handleReaction.push({
+				global.client.handleReaction.get(botid).push({
 					type: "banCommand",
 					targetID,
 					commandNeedBan,
@@ -240,7 +240,7 @@ module.exports.run = async ({ event, api, args, Users, getText }) => {
 			const commandNeedBan = reason.split(" ");
 			const nameTarget = global.data.userName.get(targetID) || await Users.getNameUser(targetID);
 			return api.sendMessage(getText("returnUnbanCommand", `${targetID} - ${nameTarget}`, ((commandNeedBan.length == global.data.commandBanned.get(targetID).length) ? getText("allCommand") : commandNeedBan.join(", "))), threadID, (error, info) => {
-				global.client.handleReaction.push({
+				global.client.handleReaction.get(botid).push({
 					type: "unbanCommand",
 					targetID,
 					commandNeedBan,

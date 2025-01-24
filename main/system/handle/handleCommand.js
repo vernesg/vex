@@ -231,7 +231,8 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
           Threads: Threads,
           Currencies: Currencies,
           permssion: permssion,
-          getText: getText2
+          getText: getText2,
+          botid: userId
         };
   
         if (command && typeof command.run === 'function') {

@@ -40,7 +40,7 @@ const getAtm = (atm, body) => new Promise(async (resolve) => {
     resolve(msg);
 })
 
-module.exports.handleReply = async function ({ api, event, handleReply, Users, Threads, getText }) {
+module.exports.handleReply = async function ({ api, event, handleReply, Users, Threads, getText, botid}) {
     const moment = require("moment-timezone");
       var gio = moment.tz("Asia/Manila").format("DD/MM/YYYY - HH:mm:s");
     const { threadID, messageID, senderID, body } = event;
@@ -52,13 +52,14 @@ module.exports.handleReply = async function ({ api, event, handleReply, Users, T
             api.sendMessage(text, handleReply.threadID, (err, info) => {
                 atmDir.forEach(each => fs.unlinkSync(each))
                 atmDir = [];
-                global.client.handleReply.push({
-                    name: this.config.name,
-                    type: "reply",
-                    messageID: info.messageID,
-                    messID: messageID,
-                    threadID
-                })
+                const handlee = {
+                            name: this.config.name,
+                            type: "sendnoti",
+                            messageID: info.messageID,
+                            messID: messageID,
+                            threadID
+                        }
+                global.client.handleReply.get(botid).push(handlee)
             });
             break;
         }
@@ -68,7 +69,7 @@ module.exports.handleReply = async function ({ api, event, handleReply, Users, T
             api.sendMessage(text, handleReply.threadID, (err, info) => {
                 atmDir.forEach(each => fs.unlinkSync(each))
                 atmDir = [];
-                global.client.handleReply.push({
+                global.client.handleReply.get(botid).push({
                     name: this.config.name,
                     type: "sendnoti",
                     messageID: info.messageID,
@@ -100,13 +101,14 @@ module.exports.run = async function ({ api, event, args, Users }) {
                         can++;
                         atmDir.forEach(each => fs.unlinkSync(each))
                         atmDir = [];
-                        global.client.handleReply.push({
+                        const handlee = {
                             name: this.config.name,
                             type: "sendnoti",
                             messageID: info.messageID,
                             messID: messageID,
                             threadID
-                        })
+                        }
+                        global.client.handleReply.get(botid).push(handlee)
                         resolve();
                     }
                 })

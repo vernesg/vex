@@ -68,7 +68,7 @@ module.exports.run = async ({
           '. title: ' +
           _0x3abfb3.title +
           '\nauthor: ' +
-          'ryuko' +
+          _0x3abfb3.author +
           '\nviews: ' +
           _0x3abfb3.view +
           '\nvotes: ' +

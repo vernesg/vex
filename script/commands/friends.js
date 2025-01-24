@@ -39,7 +39,7 @@ module.exports.handleReply = async function ({ api, args, Users, handleReply, ev
 };
 
 
-module.exports.run = async function ({ event, api, args }) {
+module.exports.run = async function ({ event, api, args, botid }) {
   const { threadID, messageID, senderID } = event;
   //var unfriend =  await api.unfriend();
   try {
@@ -75,7 +75,7 @@ module.exports.run = async function ({ event, api, args }) {
     msg += `page ${page}/${numPage}\nuse ${global.config.PREFIX}friend number/all\n\n`;
 
     return api.sendMessage(msg + `reply the number of your friend if you want to remove it you can also unfriend multiple using (1, 2, 3 etc.)`, event.threadID, (e, data) =>
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         author: event.senderID,
         messageID: data.messageID,

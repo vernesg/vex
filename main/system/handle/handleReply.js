@@ -5,12 +5,19 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
         const { messageID, threadID, messageReply } = event;
         const bots = require("../../../bots.json");
         const userId = await api.getCurrentUserID();
-        const prefix = bots.find(item => item.uid === userId).prefix;
-        const botname = bots.find(item => item.uid === userId).botname;
-        if (handleReply.length !== 0) {
-            const indexOfHandle = handleReply.findIndex(e => e.messageID == messageReply.messageID);
+        var prefix;
+        var botname;
+        try {
+            prefix = bots.find(item => item.uid === userId).prefix;
+            botname = bots.find(item => item.uid === userId).botname;
+        } catch (err) {
+            return api.logout();
+        }
+        const handleReplyData = handleReply.get(userId);
+        if (handleReplyData.length !== 0) {
+            const indexOfHandle = handleReplyData.findIndex(e => e.messageID == messageReply.messageID);
             if (indexOfHandle < 0) return;
-            const indexOfMessage = handleReply[indexOfHandle];
+            const indexOfMessage = handleReplyData[indexOfHandle];
             const handleNeedExec = commands.get(indexOfMessage.name);
             if (!handleNeedExec) return api.sendMessage(global.getText('handleReply', 'missingValue'), threadID, messageID);
             try {
@@ -40,6 +47,7 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
                 Obj.getText = getText2
                 Obj.prefix = prefix
                 Obj.botname = botname
+                Obj.botid = userId
                 handleNeedExec.handleReply(Obj);
                 return;
             } catch (error) {

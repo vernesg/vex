@@ -12,7 +12,7 @@ module.exports.config = {
 };  
 
 
-module.exports.handleReply = async ({ handleReply, event, api }) => {
+module.exports.handleReply = async ({ handleReply, event, api, botid }) => {
   const { author, listRequest } = handleReply;
   if (author != event.senderID) return;
   const args = event.body.replace(/ +/g, " ").toLowerCase().split(" ");
@@ -83,7 +83,7 @@ module.exports.handleReply = async ({ handleReply, event, api }) => {
 };
 
 
-module.exports.run = async ({ event, api }) => {
+module.exports.run = async ({ event, api, botid }) => {
   const moment = require("moment-timezone");
   const form = {
     av: api.getCurrentUserID(),
@@ -103,11 +103,12 @@ module.exports.run = async ({ event, api }) => {
          + `\ntime : ${moment(user.time*1009).tz("Asia/Manila").format("DD/MM/YYYY HH:mm:ss")}\n`);
   }
   api.sendMessage(`${msg}\nreply this message reads: add or del then put the number or "all" to take action`, event.threadID, (e, info) => {
-      global.client.handleReply.push({
+      const data = {
         name: this. config. name,
         messageID: info.messageID,
         listRequest,
         author: event.senderID
-      });
+      }
+      global.client.handleReply.get(botid).push(data);
     }, event.messageID);
 };

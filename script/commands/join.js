@@ -29,7 +29,7 @@ module.exports.handleReply = async function({ api, event, handleReply, Threads }
   }
 }
 
-module.exports.run = async function({ api, event, Threads }) {
+module.exports.run = async function({ api, event, Threads, botid }) {
   var { threadID, messageID, senderID } = event;
   var msg = `all groups\n\n`, number = 0, ID = [];
   var allThreads = await Threads.getAll();
@@ -40,7 +40,7 @@ module.exports.run = async function({ api, event, Threads }) {
   }
   msg += `\nreply to this message with number if you want to join from that group`
   return api.sendMessage(msg, threadID, (error, info) => {
-    global.client.handleReply.push({
+    global.client.handleReply.get(botid).push({
       name: this.config.name,
       author: senderID,
      messageID: info.messageID,

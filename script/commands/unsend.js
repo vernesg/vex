@@ -18,12 +18,6 @@ module.exports.languages = {
     }
 };
 
-module.exports.handleReaction = function({ api, event }) {
-    const { messageID, reaction } = event;
-    if (reaction === '👎') {
-        api.unsendMessage(messageID);
-    }
-};
 
 module.exports.run = function({ api, event, getText }) {
     if (event.messageReply.senderID != api.getCurrentUserID()) {
@@ -34,9 +28,3 @@ module.exports.run = function({ api, event, getText }) {
     }
     return api.unsendMessage(event.messageReply.messageID);
 };
-
-global.client.handleReaction = global.client.handleReaction || [];
-global.client.handleReaction.push({
-    name: this.config.name,
-    messageID: null
-});

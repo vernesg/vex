@@ -20,7 +20,8 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
             return api.logout();
         }
         if (userBanned.has(senderID) || threadBanned.has(threadID) || allowinbox == !![] && senderID == threadID) return;
-        for (const eventReg of eventRegistered) {
+        const listsEventRegistered = eventRegistered.get(userId);
+        for (const eventReg of listsEventRegistered) {
             const cmd = commands.get(eventReg);
             var getText2;
 

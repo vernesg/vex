@@ -28,7 +28,7 @@ const headers = {
   "Cookie": cookie
 };
 
-module.exports.handleReply = async function({ api, event, handleReply, getText }) {
+module.exports.handleReply = async function({ api, botid, event, handleReply, getText }) {
   const botID = api.getCurrentUserID();
   const axios = require("axios");
   
@@ -47,7 +47,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   if (type == 'menu') {
     if (["01", "1", "02", "2"].includes(args[0])) {
       reply(`please reply to this message with ${["01", "1"].includes(args[0]) ? "bio" : "nickname"} you want to change to bot or 'delete' if you want to delete ${["01", "1"].includes(args[0]) ? "bio" : "nickname"} present`, (err, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -72,7 +72,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["06", "6"].includes(args[0])) {
       reply(`reply to this message with a photo or a link of the image you want to change to the bot profile picture`, (err, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -100,7 +100,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["08", "8"].includes(args[0])) {
       return reply(`reply to this message with the id of the person you want to block, you can enter multiple ids separated by a space or a newline`, (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -110,7 +110,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["09", "9"].includes(args[0])) {
       return reply(`reply to this message with the id of the person you want to unblock, can enter multiple ids separated by space or newline`, (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -120,7 +120,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["10"].includes(args[0])) {
       return reply(`reply to this message with the content you want to create a post`, (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -130,7 +130,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["11"].includes(args[0])) {
       return reply(`respond to this message with the post id you want to delete, you can enter multiple ids separated by a space or a newline`, (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -140,7 +140,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["12", "13"].includes(args[0])) {
       return reply(`reply to this message with the postid you want to comment on (post ${args[0] == "12" ? "by user" : "on group"}), can enter multiple ids separated by space or newline`, (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -151,17 +151,17 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     }
     else if (["14", "15", "16", "17", "18", "19"].includes(args[0])) {
       reply(`reply to this message with the desired post id ${args[0]  == "13" ? "release emotions" : args[0] == "14" ? "send friend invitations" : args[0] == "15" ? "accept friend request" : args[0] == "16" ? "decline friend request" : args[0] == "17" ? "delete friends" : "send message"}, can enter multiple ids separated by space or newline`, (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.set(botid, [{
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
           type: args[0] == "14" ? "choiceIdReactionPost" : args[0] == "15" ? "addFiends" : args[0] == "16" ? "acceptFriendRequest" : args[0] == "17" ? "deleteFriendRequest" : args[0] == "18" ? "unFriends" : "choiceIdSendMessage"
-        });
+        }]);
       });
     }
     else if (["20"].includes(args[0])) {
       reply('reply to this message with the code you want to create a note', (e, info) => {
-        global.client.handleReply.push({
+        global.client.handleReply.get(botid).push({
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
@@ -264,7 +264,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     if (body && body.match(/^((http(s?)?):\/\/)?([wW]{3}\.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/g))imgUrl = body;
     else if (event.attachments[0] && event.attachments[0].type == "photo") imgUrl = event.attachments[0].url;
     else return reply(`Please enter a valid image link or reply to the message with an image you want to set as an avatar for the bot`, (err, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -324,7 +324,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   
   else if (type == 'blockUser') {
     if (!body) return reply("please enter the uid of the people you want to block on messenger, you can enter multiple ids separated by space or newline", (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -349,12 +349,12 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   
   else if (type == 'unBlockUser') {
     if (!body) return reply("please enter uid of the people you want to unblock on messenger, you can enter multiple ids separated by space or newline", (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.set(botid, [{
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
         type: 'unBlockUser'
-      });
+      }]);
     });
     const uids = body.replace(/\s+/g, " ").split(" ");
     const success = [];
@@ -374,7 +374,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   
   else if (type == 'createPost') {
     if (!body) return reply("please enter the content you want to create the article", (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -459,7 +459,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   
   else if (type == 'choiceIdCommentPost') {
     if (!body) return reply('please enter the id of the post you want to comment on', (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -468,7 +468,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
       });
     })
     reply("reply to this message with the content you want to comment on the post", (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -484,7 +484,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     const { postIDs, isGroup } = handleReply;
     
     if (!body) return reply('please enter the content you want to comment on the post', (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -609,7 +609,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   
   else if (type == 'choiceIdReactionPost') {
     if (!body) return reply(`please enter the post id you want to react to`, (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -620,7 +620,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     const listID = body.replace(/\s+/g, " ").split(" ");
     
     reply(`enter the emotion you want to react to ${listID.length} posts (unlike/like/love/heart/haha/wow/sad/angry)`, (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -637,7 +637,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
     const postIDs = handleReply.listID;
     const feeling = body.toLowerCase();
     if (!'unlike/like/love/heart/haha/wow/sad/angry'.split('/').includes(feeling)) return reply('please choose one of the following emotions unlike/like/love/heart/haha/wow/sad/angry', (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -697,7 +697,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
   else if (type == 'choiceIdSendMessage') {
     const listID = body.replace(/\s+/g, " ").split(" ");
     reply(`Enter the text of the message you want to send ${listID.length} user`, (e, info) => {
-      global.client.handleReply.push({
+      global.client.handleReply.get(botid).push({
         name: this.config.name,
         messageID: info.messageID,
         author: senderID,
@@ -813,7 +813,7 @@ module.exports.handleReply = async function({ api, event, handleReply, getText }
 };
 
 
-module.exports.run = async ({ event, api }) => {
+module.exports.run = async ({ event, api, botid }) => {
   const { threadID, messageID, senderID } = event;
   
   api.sendMessage("command list\n"
@@ -839,7 +839,7 @@ module.exports.run = async ({ event, api }) => {
      + "\n20. make notes on buildtool.dev"
      + "\n21. log out of your account"
     + `\n\nplease reply to this message with the order number you want to execute`, threadID, (err, info) => {
-    global.client.handleReply.push({
+    global.client.handleReply.get(botid).push({
       name: this.config.name,
       messageID: info.messageID,
       author: senderID,

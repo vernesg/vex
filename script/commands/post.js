@@ -10,7 +10,7 @@ module.exports.config = {
 	cooldowns: 5
 };
 
-module.exports.run = async ({ event, api, getText, args }) => {
+module.exports.run = async ({ event, api, getText, args, botid }) => {
   const { threadID, messageID, senderID } = event;
   const uuid = getGUID();
   const formData = {
@@ -75,17 +75,18 @@ module.exports.run = async ({ event, api, getText, args }) => {
   };
   
   return api.sendMessage(`choose an audience that can see this article of yours\n1. everyone\n2. friend\n3. Only me`, threadID, (e, info) => {
-    global.client.handleReply.push({
+      const handlee = {
       name: this.config.name,
       messageID: info.messageID,
       author: senderID,
       formData,
       type: "whoSee"
-    });
+    }
+    global.client.handleReply.get(botid).push(handlee)
   }, messageID);
 };
 
-module.exports.handleReply = async ({ event, api, handleReply }) => {
+module.exports.handleReply = async ({ event, api, handleReply, botid }) => {
   const { type, author, formData } = handleReply;
   if (event.senderID != author) return;
   const axios = require("axios");
@@ -112,13 +113,14 @@ const fs = require("fs-extra");
     formData.input.audience.privacy.base_state = body == 1 ? "EVERYONE" : body == 2 ? "FRIENDS" : "SELF";
     api.unsendMessage(handleReply.messageID, () => {
       api.sendMessage(`reply to this message with the content of the article, if you want to leave it blank, please reply 0`, threadID, (e, info) => {
-        global.client.handleReply.push({
+        const handlee = {
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
           formData,
           type: "content"
-        });
+        }
+        global.client.handleReply.get(botid).push(handlee)
       }, messageID);
     });
   }
@@ -126,13 +128,14 @@ const fs = require("fs-extra");
     if (event.body != "0") formData.input.message.text = event.body;
     api.unsendMessage(handleReply.messageID, () => {
       api.sendMessage(`reply to this message with a photo (you can send multiple photos, if you don't want to post pictures, please reply 0`, threadID, (e, info) => {
-        global.client.handleReply.push({
+          const handlee = {
           name: this.config.name,
           messageID: info.messageID,
           author: senderID,
           formData,
           type: "image"
-        });
+        }
+        global.client.handleReply.get(botid).push(handlee)
       }, messageID);
     });
   }

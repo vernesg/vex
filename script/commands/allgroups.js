@@ -44,7 +44,7 @@ module.exports.handleReply = async function({ api, event, args, Threads, handleR
 };
 
 
-module.exports.run = async function({ api, event, client }) {
+module.exports.run = async function({ api, event, client, botid }) {
   var inbox = await api.getThreadList(100, null, ['INBOX']);
   let list = [...inbox].filter(group => group.isSubscribed && group.isGroup);
 
@@ -78,7 +78,7 @@ module.exports.run = async function({ api, event, client }) {
   }
 
   api.sendMessage(msg + 'reply "out" or "ban" the number of order to out or ban that thread!!', event.threadID, (e, data) =>
-    global.client.handleReply.push({
+    global.client.handleReply.get(botid).push({
       name: this.config.name,
       author: event.senderID,
       messageID: data.messageID,

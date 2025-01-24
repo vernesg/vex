@@ -11,7 +11,7 @@ module.exports.config = {
 	cooldowns: 5
 };
 
-module.exports.handleReaction = async ({ event, api, Threads, handleReaction }) => {
+module.exports.handleReaction = async ({ event, api, Threads, handleReaction, botid }) => {
 	if (parseInt(event.userID) !== parseInt(handleReaction.author)) return;
 	switch (handleReaction.type) {
 		case "ban": {
@@ -35,7 +35,7 @@ module.exports.handleReaction = async ({ event, api, Threads, handleReaction }) 
 	}
 }
 
-module.exports.run = async ({ event, api, args, Threads }) => {
+module.exports.run = async ({ event, api, args, Threads, botid }) => {
     let content = args.slice(1, args.length);
 	switch (args[0]) {
 		case "ban": {
@@ -47,7 +47,7 @@ module.exports.run = async ({ event, api, args, Threads }) => {
 				if (!dataThread) return api.sendMessage(`thread does not exist in database\ngroup id : ${idThread}`, event.threadID);
 				if (dataThread.banned) return api.sendMessage(`already banned group id ${idThread}`, event.threadID);
 				return api.sendMessage(`do you want to ban group id ${idThread}?\n\nplease react to this message to ban`, event.threadID, (error, info) => {
-					global.client.handleReaction.push({
+					global.client.handleReaction.get(botid).push({
 						name: this.config.name,
 						messageID: info.messageID,
 						author: event.senderID,
@@ -67,7 +67,7 @@ module.exports.run = async ({ event, api, args, Threads }) => {
 				if (!dataThread) return api.sendMessage(`thread does not exist in the database\ngroup id : ${idThread}`, event.threadID);
 				if (dataThread.banned != 1) return api.sendMessage(`[${idThread}] Not banned before`, event.threadID);
 				return api.sendMessage(`you want to unban group id ${idThread}?\n\nPlease react to this message to ban`, event.threadID, (error, info) => {
-					global.client.handleReaction.push({
+					global.client.handleReaction.get(botid).push({
 						name: this.config.name,
 						messageID: info.messageID,
 						author: event.senderID,

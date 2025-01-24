@@ -45,6 +45,7 @@
     "nodemailer": "^6.9.16",
     "npmlog": "^7.0.1",
     "openai": "^3.1.0",
+    "pastebin-api": "^7.0.0",
     "path": "^0.12.7",
     "pidusage": "^3.0.2",
     "process": "^0.11.10",

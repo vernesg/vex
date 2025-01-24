@@ -16,7 +16,7 @@ module.exports.config = {
     }
 };
 
-const loadCommand = function ({ moduleList, threadID, messageID, getText }) {
+const loadCommand = function ({ moduleList, threadID, messageID, getText, botid }) {
     
     const { execSync } = global.nodemodule['child_process'];
     const { writeFileSync, unlinkSync, readFileSync } = global.nodemodule['fs-extra'];
@@ -37,7 +37,7 @@ const loadCommand = function ({ moduleList, threadID, messageID, getText }) {
             global.client.commands.delete(nameModule);
             if (!command.config || !command.run || !command.config.category) 
                 throw new Error('Module is malformed!');
-            global.client['eventRegistered'] = global.client['eventRegistered']['filter'](info => info != command.config.name);
+            
             if (command.config.dependencies && typeof command.config.dependencies == 'object') {
                 const listPackage = JSON.parse(readFileSync('./package.json')).dependencies,
                     listbuiltinModules = require('module')['builtinModules'];
@@ -97,7 +97,6 @@ const loadCommand = function ({ moduleList, threadID, messageID, getText }) {
             } catch (error) {
                 throw new Error('unable to onLoad module, error : ' + JSON.stringify(error), 'error');
             }
-            if (command.handleEvent) global.client.eventRegistered.push(command.config.name);
             (global.config.disabledcmds.includes(nameModule + '.js') || configValue.disabledcmds.includes(nameModule + '.js')) 
             && (configValue.disabledcmds.splice(configValue.disabledcmds.indexOf(nameModule + '.js'), 1),
             global.config.disabledcmds.splice(global.config.disabledcmds.indexOf(nameModule + '.js'), 1))
@@ -114,7 +113,7 @@ const loadCommand = function ({ moduleList, threadID, messageID, getText }) {
     return;
 }
 
-const unloadModule = function ({ moduleList, threadID, messageID }) {
+const unloadModule = function ({ moduleList, threadID, messageID, botid}) {
     const { writeFileSync, unlinkSync } = global.nodemodule["fs-extra"];
     const { mainPath, api } = global.client;
     const configPath = "../../config.json"
@@ -126,7 +125,6 @@ const unloadModule = function ({ moduleList, threadID, messageID }) {
 
     for (const nameModule of moduleList) {
         global.client.commands.delete(nameModule);
-        global.client.eventRegistered = global.client.eventRegistered.filter(item => item !== nameModule);
         configValue["disabledcmds"].push(`${nameModule}.js`);
         global.config["disabledcmds"].push(`${nameModule}.js`);
         logger(`unloaded command ${nameModule}.`);
@@ -138,7 +136,7 @@ const unloadModule = function ({ moduleList, threadID, messageID }) {
     return api.sendMessage(`unloaded ${moduleList.length} module`, threadID, messageID);
 }
 
-module.exports.run = function ({ event, args, api }) {
+module.exports.run = function ({ event, args, api, botid }) {
     
     const { readdirSync } = global.nodemodule["fs-extra"];
     const { threadID, messageID } = event;
@@ -150,21 +148,21 @@ module.exports.run = function ({ event, args, api }) {
     switch (args[0]) {
         case "load": {
             if (moduleList.length == 0) return api.sendMessage("module name cannot be empty.", threadID, messageID);
-            else return loadCommand({ moduleList, threadID, messageID });
+            else return loadCommand({ moduleList, threadID, messageID, botid });
         }
         case "unload": {
             if (moduleList.length == 0) return api.sendMessage("module name cannot be empty.", threadID, messageID);
-            else return unloadModule({ moduleList, threadID, messageID });
+            else return unloadModule({ moduleList, threadID, messageID, botid });
         }
         case "loadAll": {
             moduleList = readdirSync(__dirname).filter((file) => file.endsWith(".js") && !file.includes('example'));
             moduleList = moduleList.map(item => item.replace(/\.js/g, ""));
-            return loadCommand({ moduleList, threadID, messageID });
+            return loadCommand({ moduleList, threadID, messageID, botid });
         }
         case "unloadAll": {
             moduleList = readdirSync(__dirname).filter((file) => file.endsWith(".js") && !file.includes('example') && !file.includes("command"));
             moduleList = moduleList.map(item => item.replace(/\.js/g, ""));
-            return unloadModule({ moduleList, threadID, messageID });
+            return unloadModule({ moduleList, threadID, messageID, botid });
         }
         case "info": {
             const command = global.client.commands.get(moduleList.join("") || "");
