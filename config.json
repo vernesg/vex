@@ -12,7 +12,7 @@
     "100091459940475"
   ],
   "autorestart": {
-    "status": true,
+    "status": false,
     "time": 40,
     "note": "the system is automatically restarts in 40 minutes"
   },
