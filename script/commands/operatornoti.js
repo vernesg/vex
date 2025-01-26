@@ -81,7 +81,7 @@ module.exports.handleReply = async function ({ api, event, handleReply, Users, T
     }
 }
 
-module.exports.run = async function ({ api, event, args, Users }) {
+module.exports.run = async function ({ api, event, botid, args, Users }) {
     const moment = require("moment-timezone");
       var gio = moment.tz("Asia/Manila").format("DD/MM/YYYY - HH:mm:s");
     const { threadID, messageID, senderID, messageReply } = event;

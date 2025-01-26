@@ -239,9 +239,9 @@ function buildAPI(globalOptions, html, jar) {
   try { clearInterval(checkVerified); } catch (_) {}
   const clientID = (Math.random() * 2147483648 | 0).toString(16);
   const CHECK_MQTT = {
-    oldFBMQTTMatch: html.match(/irisSeqID:"(.+?)",appID:219994525426954,endpoint:"(.+?)"/),
-    newFBMQTTMatch: html.match(/{"app_id":"219994525426954","endpoint":"(.+?)","iris_seq_id":"(.+?)"}/),
-    legacyFBMQTTMatch: html.match(/\["MqttWebConfig",\[\],{"fbid":"(.*?)","appID":219994525426954,"endpoint":"(.*?)","pollingEndpoint":"(.*?)"/)
+    oldFBMQTTMatch: html.match(/irisSeqID:"(.+?)",appID:135801565819,endpoint:"(.+?)"/),
+    newFBMQTTMatch: html.match(/{"app_id":"135801565819","endpoint":"(.+?)","iris_seq_id":"(.+?)"}/),
+    legacyFBMQTTMatch: html.match(/\["MqttWebConfig",\[\],{"fbid":"(.*?)","appID":135801565819,"endpoint":"(.*?)","pollingEndpoint":"(.*?)"/)
   }
   let Slot = Object.keys(CHECK_MQTT);
   let mqttEndpoint, irisSeqID;

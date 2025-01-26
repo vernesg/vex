@@ -449,7 +449,9 @@ for (const ev of evntsList) {
 }
 
 //REJECT UNHANDLED REJECTION
-process.on('unhandledRejection', (reason) => {});
+process.on('unhandledRejection', (reason) => {
+    console.error(reason)
+});
 
 
 // SEQUELIZE AUTH
