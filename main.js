@@ -75,7 +75,7 @@ async function logOut(res, botId) {
         res.send({data});
     } catch (err) {
         var error = `can't logged out bot ${botId}, maybe the bot is not logged in.`;
-        res.status(400).send(botId);
+        return res.status(400).send(botId);
     }
 }
 function generateToken(length) {
@@ -90,9 +90,6 @@ function generateToken(length) {
 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/create.html'));
-});
-app.get('/create', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/create.html'));
 });
 app.get('/commands', (req, res) => {
@@ -758,6 +755,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                     }
                     listener(message);
                 });
+                
             } catch (error) {
                 logger.error(`error on bot ${userId}, removing data..`);
                 deleteUser(userId);

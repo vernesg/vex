@@ -1,7 +1,7 @@
 "use strict";
 
 var utils = require("../utils");
-// @NethWs3Dev
+var log = require("npmlog");
 var bluebird = require("bluebird");
 
 var allowedProperties = {
@@ -63,7 +63,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         callback(null, resData);
       })
       .catch(function (err) {
-        console.error("uploadAttachment", err);
+        log.error("uploadAttachment", err);
         return callback(err);
       });
   }
@@ -94,7 +94,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         callback(null, resData.payload.share_data.share_params);
       })
       .catch(function (err) {
-        console.error("getUrl", err);
+        log.error("getUrl", err);
         return callback(err);
       });
   }
@@ -111,7 +111,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       }
       form["specific_to_list[" + threadID.length + "]"] = "fbid:" + ctx.userID;
       form["client_thread_id"] = "root:" + messageAndOTID;
-      console.log("sendMessage", "Sending message to multiple users: " + threadID);
+      log.info("sendMessage", "Sending message to multiple users: " + threadID);
     } else {
       // This means that threadID is the id of a user, and the chat
       // is a single person chat
@@ -146,7 +146,7 @@ module.exports = function (defaultFuncs, api, ctx) {
 
         if (resData.error) {
           if (resData.error === 1545012) {
-            console.warn(
+            log.warn(
               "sendMessage",
               "Got error 1545012. This might mean that you're not part of the conversation " +
               threadID
@@ -168,7 +168,10 @@ module.exports = function (defaultFuncs, api, ctx) {
         return callback(null, messageInfo);
       })
       .catch(function (err) {
-        console.error("sendMessage", err);
+        log.error("sendMessage", err);
+        if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
+          ctx.loggedIn = false;
+        }
         return callback(err);
       });
   }
@@ -290,14 +293,14 @@ module.exports = function (defaultFuncs, api, ctx) {
         const offset = msg.body.indexOf(tag, mention.fromIndex || 0);
 
         if (offset < 0) {
-          console.warn(
+          log.warn(
             "handleMention",
             'Mention for "' + tag + '" not found in message string.'
           );
         }
 
         if (mention.id == null) {
-          console.warn("handleMention", "Mention id should be non-null.");
+          log.warn("handleMention", "Mention id should be non-null.");
         }
 
         const id = mention.id || 0;

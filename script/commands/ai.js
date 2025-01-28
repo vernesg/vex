@@ -19,7 +19,7 @@ module.exports.run = async function ({api, event, args, botname }) {
         return api.sendMessage(`please provide a message`, event.threadID, event.messageID);
     }
     try {
-        const res = await axios.get(`https://character-api.up.railway.app/api?name=gpt3&message=${ask}`);
+        const res = await axios.get(`https://character-api.up.railway.app/api?name=blackbox&message=${ask}`);
         const data = res.data;
         if (data.status == "success") {
             return api.sendMessage(data.message, event.threadID, event.messageID);

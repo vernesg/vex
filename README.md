@@ -1,4 +1,4 @@
-## ABOUT ME
+### ABOUT ME
 
 **Name**: `Ryuko Developer`  
 **Age**: `18`  
@@ -6,7 +6,7 @@
 
 ---
 
-## GETTING STARTED
+### GETTING STARTED
 
 To set up the project, follow these steps:
 
@@ -22,7 +22,7 @@ To set up the project, follow these steps:
 
 ---
 
-## SOURCES
+### SOURCES
 
 - **Original File**: [BotPack](https://replit.com/@YanMaglinte/BotPack?v=1) by `Yan Maglinte`  
 - **Modified Version**: [Ryuko](https://github.com/ryukodeveloper/Ryuko-V4) by `Ryuko Developer`  
@@ -31,7 +31,7 @@ To set up the project, follow these steps:
 
 ---
 
-## UPDATES
+### UPDATES
 
 - **Configuration**: You can now edit the prefix, bot name, and admins for each bot in the `bots.json` file.
 - **Admin Access Panel**: Configure your admin password in `config.json`.
@@ -40,7 +40,7 @@ To set up the project, follow these steps:
 - **Spam Fix**: Resolved issues with spam in the ban system.
 - **Premium Command Feature**: Enable premium features by adding a `premium` variable with a boolean value.
 
-### Premium Usage Example
+#### Premium Usage Example
 
 ```javascript
 module.exports.config = {
@@ -57,24 +57,24 @@ module.exports.config = {
 }
 ```
 
-### Upcoming Update
+#### Upcoming Update
 
 - **Command Aliases**: Adding aliases for each command.
 
 ---
 
-## BOX APPROVAL
+### BOX APPROVAL
 
 The `box approval` feature is enabled by default. To disable it, set the `approval` value to `false` in `config.json`.
 
-### Approving Boxes
+#### Approving Boxes
 
 You can approve boxes using the `approve` command without a prefix. The syntax is:
 ```
 approve (box/remove) (uid/tid)
 ```
 
-### Examples:
+#### Examples:
 
 - **View Approved List**:
   ```bash
@@ -93,7 +93,7 @@ approve (box/remove) (uid/tid)
 
 ---
 
-## HOW TO ADD COMMANDS
+### HOW TO ADD COMMANDS
 
 To add a new command, use the following structure:
 
@@ -119,7 +119,7 @@ module.exports.run = async ({ api, event, args, Threads, Users, getText }) => {
 
 ---
 
-### CONCLUSION
+#### CONCLUSION
 
 This documentation provides a comprehensive overview of the Ryuko Developer project, including setup instructions, updates, and command usage. If you have any questions or need further assistance, feel free to reach out!
 

@@ -20,7 +20,8 @@ module.exports.handleEvent = async ({
 	var fbScrapper = require('fb-downloader-scrapper');
     var ttScrapper = require('ruhend-scraper').ttdl;
 	var path = require('path');
-	const cacheFile = `${event.messageID}.mp4`;
+	try {
+    const cacheFile = `${event.messageID}.mp4`;
 	const cachePath = path.join(__dirname, 'cache/' + cacheFile);
 	const fbUrlRegex = /(https?:\/\/www\.facebook\.com\/[^\s]+)/g;
     const ttUrlRegex = /(https?:\/\/vt\.tiktok\.com\/[^\s]+)/g;
@@ -83,6 +84,9 @@ module.exports.handleEvent = async ({
 			return;
 		}
 	}
+    } catch (err) {
+		return;
+}
 }
 
 module.exports.run = async ({
