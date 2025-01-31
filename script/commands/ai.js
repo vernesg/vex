@@ -2,7 +2,7 @@ module.exports.config = {
     name: "ai",
     credits: "ryuko",
     version: '1.0.0',
-    description: "talk with chat gpt-3",
+    description: "talk with gemini 2.0 flash exp",
     prefix: false,
     premium: false,
     permission: 0,
@@ -19,7 +19,7 @@ module.exports.run = async function ({api, event, args, botname }) {
         return api.sendMessage(`please provide a message`, event.threadID, event.messageID);
     }
     try {
-        const res = await axios.get(`https://character-api.up.railway.app/api?name=blackbox&message=${ask}`);
+        const res = await axios.get(`https://character-api.up.railway.app/api?name=gemini&message=${ask}`);
         const data = res.data;
         if (data.status == "success") {
             return api.sendMessage(data.message, event.threadID, event.messageID);

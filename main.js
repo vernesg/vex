@@ -98,18 +98,22 @@ app.get('/commands', (req, res) => {
     res.json(command);
 })
 app.post('/profile', async (req, res) => {
-    delete require.cache[require.resolve('./bots.json')];
-    const { botid } = req.body;
-    const botPath = require('./bots.json');
-    const data = botPath.find(data => data.uid === botid);
-    const name = data.name || 'Unknown';
-    const uid = botid;
-    const thumbSrc = data.thumbSrc;
-    const profileUrl = data.profileUrl;
-    const botname = data.botname;
-    const botprefix = data.prefix;
-    const admins = data.admins.length;
-    return res.send({name, uid, thumbSrc, profileUrl, botname, botprefix, admins});
+    try {
+        delete require.cache[require.resolve('./bots.json')];
+        const { botid } = req.body;
+        const botPath = require('./bots.json');
+        const data = botPath.find(data => data.uid === botid);
+        const name = data.name || 'Unknown';
+        const uid = botid;
+        const thumbSrc = data.thumbSrc;
+        const profileUrl = data.profileUrl;
+        const botname = data.botname;
+        const botprefix = data.prefix;
+        const admins = data.admins.length;
+        return res.send({name, uid, thumbSrc, profileUrl, botname, botprefix, admins});
+    } catch (err) {
+        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+    }
 })
 
 app.post('/logout', async (req, res) => {

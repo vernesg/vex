@@ -68,7 +68,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
       if (command && (command.config.name.toLowerCase() === commandName.toLowerCase()) && (!admins.includes(senderID) && !operators.includes(senderID) && adminonly && senderID !== api.getCurrentUserID())) {
         return api.sendMessage(replyAD, threadID, messageID);
       }
-      if (typeof body === 'string' && body.startsWith(prefix) && (!admins.includes(senderID) && adminonly && senderID !== api.getCurrentUserID())) {
+      if (typeof body === 'string' && body.startsWith(prefix) && (!operators.includes(senderID) && adminonly && senderID !== api.getCurrentUserID())) {
         return api.sendMessage(replyAD, threadID, messageID);
       }
   

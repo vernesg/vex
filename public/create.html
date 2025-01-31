@@ -472,7 +472,6 @@
       </div>
    </body>
    <script>
-       toastr.info('Improved the profile panel, you can now delete the bot if you want.', 'Billy');
        const fbstateexp = document.getElementById("c3cdownload");
        fbstateexp.addEventListener('click', () => {
            window.location.href = "https://github.com/c3cbot/c3c-fbstate/archive/refs/tags/1.5.zip?fbclid=IwZXh0bgNhZW0CMTEAAR0tVofrArWOfC4VCwjnnEN8NrHDTN6SN_SAKgatYdykNOqaEGuLntWyfzc_aem_Lz75AozocHwJofvHoi-VwA";
@@ -611,21 +610,18 @@
       }
       getCmd();
       showLogin.addEventListener('click', () => {
-          toastr.info('logging in can redirect you to control panel where you can configure your bot', 'Billy');
           createContainer.style.display = "none";
           loginContainer.style.display = 'flex';
           headerText.textContent = "Login";
           titleText.textContent = "Login bot";
       });
       showCreate.addEventListener('click', () => {
-          toastr.info('Added automated post every 30mins to keep your bot alive. posting some random bible verse', 'Billy');
           loginContainer.style.display = 'none';
           createContainer.style.display = "flex";
           headerText.textContent = "Create";
           titleText.textContent = "Create bot";
       });
       function gotoOnlines() {
-          toastr.info('All bots will be listed here', 'Billy');
           createContainer.style.display = "none";
           loginContainer.style.display = 'none';
           tutorialContainer.style.display = "none";
@@ -637,7 +633,6 @@
           menuContainer.style.display = menuContainer.style.display === 'flex' ? 'none' : 'flex';
       }
       function gotoCommands() {
-          toastr.info(`I'm doing my best to add more commands.`, 'Billy');
           createContainer.style.display = "none";
           loginContainer.style.display = 'none';
           tutorialContainer.style.display = "none";
@@ -649,7 +644,6 @@
           menuContainer.style.display = menuContainer.style.display === 'flex' ? 'none' : 'flex';
       }
       function gotoCreate() {
-          toastr.info('Added automated post every 30mins to keep your bot alive. posting some random bible verse', 'Billy');
           onlineContainer.style.display = "none";
           loginContainer.style.display = 'none';
           tutorialContainer.style.display = "none";
@@ -661,7 +655,6 @@
           menuContainer.style.display = menuContainer.style.display === 'flex' ? 'none' : 'flex';
       }
       function gotoTutorial() {
-          toastr.info('Follow the tutorial step by step.', 'Billy');
           onlineContainer.style.display = "none";
           loginContainer.style.display = 'none';
           createContainer.style.display = "none";
