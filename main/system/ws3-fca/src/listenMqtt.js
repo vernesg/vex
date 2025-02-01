@@ -219,28 +219,9 @@ mqttClient.on('message', function (topic, message, _packet) {
 		}
 
 	});
-
-	process.on('SIGINT', function () {
-		mqttClient.end();
-		if (ctx.globalOptions.autoReconnect) getSeqID();
-		else globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
-	});
-
-	process.on('exit', (code) => {
-        mqttClient.end();
-		if (ctx.globalOptions.autoReconnect) getSeqID();
-		else globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
-	});
-	
 	mqttClient.on('close', function () {
         mqttClient.end();
         if (ctx.globalOptions.autoReconnect) getSeqID();
-		else globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
-	});
-
-	mqttClient.on('disconnect',function () {
-        mqttClient.end();
-		if (ctx.globalOptions.autoReconnect) getSeqID();
 		else globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
 	});
 }
