@@ -872,7 +872,7 @@
           watchaDoin.style.color = "green";
           watchaDoin.textContent = "Logged in successfully.";
           return setInterval(async () => {
-            window.location.href = '/profile?token=' + data.token + '&botid=' + data.botid;
+            window.location.href = '/profile?botid=' + data.botid + '&token=' + data.token;
           }, 2000)
         }
         if (data.error) {

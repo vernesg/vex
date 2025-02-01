@@ -78,16 +78,6 @@ async function logOut(res, botId) {
         return res.status(400).send(botId);
     }
 }
-function generateToken(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let token = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        token += characters[randomIndex];
-    }
-    return token;
-}
-
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/create.html'));
@@ -167,8 +157,7 @@ app.post('/configure', async (req, res) => {
 app.get('/profile', (req, res) => {
     const token = req.query.token;
     const botid = req.query.botid;
-    const userToken = require('./bots.json');
-    const existingToken = userToken.find(i => i.token == token)
+    const botinfo = require('./bots.json');
     if (!token) {
         return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
     }
@@ -176,7 +165,11 @@ app.get('/profile', (req, res) => {
         return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
     }
     try {
-        jwt.verify(token, existingToken.deobtoken , (err, decoded) => {
+        const verifyToken = botinfo.find(i => i.uid == botid).token;
+        if (verifyToken != token) {
+            return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+        }
+        jwt.verify(token, botid , (err, decoded) => {
         if (err) {
             return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
         }
@@ -195,10 +188,8 @@ app.post('/login', async (req, res) => {
     const botConfig = botChanges.find(i => i.username == username && i.password == password);
     const isExist = botFile.find(i => i.username == username && i.password == password);
     if (isExist) {
-        const randomToken = generateToken(10);
-        const token = jwt.sign({username: username, password: password}, randomToken, {expiresIn: '1h'});
+        const token = jwt.sign({username: username, password: password}, isExist.uid, {expiresIn: '1h'});
         botConfig.token = token;
-        botConfig.deobtoken = randomToken;
         await fs.writeFileSync(botPath, JSON.stringify(botChanges, null, 2));
         delete require.cache[require.resolve('./bots.json')];
         return res.send({token, botid: isExist.uid});
