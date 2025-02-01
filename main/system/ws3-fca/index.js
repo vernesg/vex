@@ -464,11 +464,15 @@ async function loginHelper(appState, email, password, globalOptions, apiCustomiz
       appState = arrayAppState;
     }
 
-    appState.map(c => {
+    try {
+        appState.map(c => {
       const str = c.key + "=" + c.value + "; expires=" + c.expires + "; domain=" + c.domain + "; path=" + c.path + ";";
       jar.setCookie(str, "http://" + c.domain);
     });
-
+    
+    } catch (err) {
+        return callback(`invalid appstate`);
+    }
     // Load the main page.
     mainPromise = utils
       .get('https://www.facebook.com/', jar, null, globalOptions, {
