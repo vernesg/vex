@@ -67,8 +67,7 @@ module.exports.createUser = async (name, userID, botName, botPrefix, username, p
       "time": 0,
       "thumbSrc": thumbSrc,
       "profileUrl": profileUrl,
-      "token": "",
-      "deobtoken": ""
+      "token": ""
     });
     log(`loaded ${chalk.blueBright(`${name}'s`)} data in ${chalk.blueBright(`bots.json`)} file`, "load");
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
