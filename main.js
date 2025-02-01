@@ -63,7 +63,7 @@ global.editBots = require("./main/system/editconfig.js");
 console.clear();
 console.log(chalk.blue('LOADING MAIN SYSTEM'));
 app.use(express.json());
-
+app.use(express.static('public'));
 async function logOut(res, botId) {
     try {
         delete require.cache[require.resolve('./bots.json')];
@@ -79,9 +79,6 @@ async function logOut(res, botId) {
     }
 }
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/create.html'));
-});
 app.get('/commands', (req, res) => {
     const commands = global.client.commands;
     const command = Array.from(commands.values());
