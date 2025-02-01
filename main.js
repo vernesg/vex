@@ -177,6 +177,32 @@ app.get('/profile', (req, res) => {
     }
 });
 
+app.get('/profile.html', (req, res) => {
+    const token = req.query.token;
+    const botid = req.query.botid;
+    const botinfo = require('./bots.json');
+    if (!token) {
+        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+    }
+    if (!botid) {
+        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+    }
+    try {
+        const verifyToken = botinfo.find(i => i.uid == botid).token;
+        if (verifyToken != token) {
+            return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+        }
+        jwt.verify(token, botid , (err, decoded) => {
+        if (err) {
+            return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+        }
+        res.sendFile(path.join(__dirname, 'public/profile.html'));
+    }); 
+    } catch (err) {
+        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+    }
+});
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const botFile = require("./bots.json");
