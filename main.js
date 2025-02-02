@@ -64,7 +64,7 @@ console.clear();
 console.log(chalk.blue('LOADING MAIN SYSTEM'));
 app.use(express.json());
 app.use(express.static('public/main'));
-async function logOut(res, botId) {
+async function logOut(res, botId) {;
     try {
         delete require.cache[require.resolve('./bots.json')];
         delete require.cache[require.resolve('./states/' + botId + '.json')];
@@ -147,6 +147,9 @@ app.post('/configure', async (req, res) => {
             break;
         case 'admin':
             addAdmin(content);
+            break;
+        case 'logout':
+            editDetails('token', content);
             break;
     }
 })

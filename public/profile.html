@@ -20,15 +20,15 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 25px;
         width: 100%;
         box-sizing: border-box;
       }
 
-      img {
+      #icon-mainn {
         border-radius: 50%;
         display: absolute;
-        border: 2px solid gray;
+        border: 3px solid blue;
+        padding: 1px;
         background-size: cover;
         width: 100px;
         height: 100px;
@@ -37,7 +37,6 @@
         user-select: none;
         margin-top: 50px;
         margin-bottom: 5px;
-        animation: glow 3s infinite alternate;
       }
 
       .name {
@@ -51,6 +50,7 @@
       .bio {
         font-size: 10px;
         margin-top: 0px;
+        width: 350px;
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
@@ -63,11 +63,10 @@
         border: 1px solid #dee2e6;
         animation: glow 3s infinite alternate;
         border-radius: 10px;
-        max-width: 100;
         background-color: #1e1e1e;
         text-align: center;
         margin-top: 10px;
-        width: 95%;
+        width: 300px;
       }
       input[type="text"], input[type="password"]{
          background: transparent;
@@ -84,8 +83,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 90%;
-        margin: 0;
+        width: 95%;
         padding: 10px;
       }
 
@@ -95,7 +93,13 @@
         align-items: center;
         width: 90%;
         margin: 0;
+        margin-top: -135px;
         padding: 10px;
+      }
+      #background-pic {
+        width: 100%;
+        height: 150px;
+        margin-top: -20px;
       }
 
       button {
@@ -136,53 +140,7 @@
           border-color: gray;
         }
       }
-
-      @media (min-width: 768px) {
-        button {
-          font-size: 10px;
-        }
-      }
-
-      @media (max-width: 600px) {
-        button {
-          font-size: 10px;
-        }
-      }
-
-      .header {
-        position: fixed;
-        top: 0;
-        width: 99%;
-        z-index: 1000;
-        background-color: #1e1e1e;
-        padding: 10px;
-        font-size: 2rem;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
-        color: white;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 30px;
-      }
-
-      .header-text {
-        font-size: 1rem;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        margin-left: 20px;
-      }
-
-      .menu-toggle {
-        display: block;
-        width: 30px;
-        height: 22px;
-        margin-right: 35px;
-        position: relative;
-      }
+      
 
       .bar {
         display: block;
@@ -233,17 +191,6 @@
         list-style: none;
         margin-bottom: 15px;
       }
-
-      @media screen and (max-width: 768px) {
-        .header-text {
-          font-size: 1.5rem;
-        }
-
-        .container {
-          padding: 20px;
-        }
-      }
-
       .menu-buttons {
         width: 100%;
         margin-bottom: 10px;
@@ -285,20 +232,130 @@
             border: 1px solid gray;
             font-size: 10px;
         }
+        .follow-button {
+        padding: 5px;
+        border: 1px solid blue;
+        background-color: blue;
+        border-radius: 5px;
+        margin-top: 5px;
+        color: white;
+        width: 130px;
+        text-decoration: none;
+        margin-right: 45px;
+        font-size: 13px;
+        text-align: center;
+      }
+      .line-main {
+        width: 100%;
+        height: 1px;
+        margin-bottom: 10px;
+        margin-top: 20px;
+      }
+      .menu-toggle {
+        display: block;
+        width: 30px;
+        height: 10px;
+        margin-top: -35.5px;
+        margin-left: 150px;
+        margin-bottom: 15px;
+        position: relative;
+      }
+      @media (min-width:960px) {
+          #icon-mainn {
+          border-radius: 50%;
+          display: absolute;
+          border: 3.5px solid blue;
+          background-size: cover;
+          padding: 1px;
+          width: 150px;
+          height: 150px;
+          -webkit-user-select: none;
+          /* Safari */
+          -ms-user-select: none;
+          /* IE 10 and IE 11 */
+          user-select: none;
+          margin-top: 80px;
+          margin-left: -740px;
+        }
+        .name {
+          font-size: 20px;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          margin-top: -100px;
+          margin-left: -410px;
+        }
+        .bio {
+          font-size: 8px;
+          width: 300px;
+          -webkit-user-select: none;
+          /* Safari */
+          -ms-user-select: none;
+          /* IE 10 and IE 11 */
+          user-select: none;
+          /* Standard syntax */
+          color: gray;
+          margin-top: -10px;
+          text-align: left;
+          margin-left: -220px;
+        }
+        #background-pic {
+          width: 100%;
+          height: 300px;
+          margin-top: -5px;
+        }
+        .follow-button {
+          padding: 5px;
+          border: 1px solid blue;
+          background-color: blue;
+          border-radius: 5px;
+          color: white;
+          margin-left: 600px;
+          margin-top: -50px;
+          width: 130px;
+          text-decoration: none;
+          font-size: 13px;
+          text-align: center;
+        }
+        .menu-toggle {
+          display: block;
+          width: 30px;
+          height: 22px;
+          margin-top: -35px;
+          margin-left: 850px;
+          position: relative;
+        }
+        .line-main {
+          width: 100%;
+          height: 1px;
+          margin-bottom: 10px;
+          margin-top: 55px;
+        }
+        .container {
+        padding: 20px;
+        border: 1px solid #dee2e6;
+        animation: glow 3s infinite alternate;
+        border-radius: 10px;
+        background-color: #1e1e1e;
+        text-align: center;
+        margin-top: 10px;
+        width: 80%;
+      }
+      }
     </style>
   </head>
   <body class="bodyy">
-    <div class="header">
-      <p class="header-text">Profile</p>
-      <div class="menu-toggle">
+    
+    <img id="background-pic" src="https://img1.picmix.com/output/stamp/normal/3/7/5/5/2195573_939df.gif"></img>
+    <div class="okay-container">
+        
+    </div>
+    <div class="menu-toggle">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
       </div>
-    </div>
-    
-    <div class="okay-container">
-    </div>
+      <img class="line-main" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHazg1aUtZ57F9hGXaXzzPGRuOHHMDbonhWj3b4GCNyrgxC2azDi920IX8&s=10"></img
     <div class="info-container">
         
         <div class="container">
@@ -338,13 +395,13 @@
                 const { thumbSrc, uid, name, profileUrl, botname, botprefix, admins} = data;
                 const profilePic = document.createElement('img');
                 profilePic.src = thumbSrc;
+                profilePic.id = "icon-mainn"
                 const botName = document.createElement('h1');
                 botName.textContent = name;
                 botName.className = "name";
                 const profileButton = document.createElement('a');
                 profileButton.textContent = `bot profile`;
-                profileButton.className = "bio";
-                profileButton.style = "color: blue; text-decoration: none;";
+                profileButton.className = "follow-button";
                 profileButton.href = profileUrl;
                 const profileBio = document.createElement('p');
                 profileBio.textContent = `Hi, I am ${name} and I am using Ryuko-V5 file created by Billy Dulay known as Ryuko.`
@@ -421,7 +478,30 @@
         window.location.reload();
     }
     function logOut() {
-        window.location.href = "/";
+        const { botid } = getQueryData();
+        toastr.info(`logging out please wait..`, 'Billy');
+        fetch('/configure', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({botId: botid, content: 'nan', type: 'logout'})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.data) {
+                toastr.success(`logged out successfully`, 'Billy');
+                return setInterval(async () => {
+                      window.location.href = '/';
+                }, 2000)
+            }
+            if (data.error) {
+                return toastr.error(`something went wrong while logging out`, 'Billy');
+            }
+        })
+        .catch(err => {
+            return toastr.error(err, 'Billy');
+        })
     }
     
     async function ebotName() {
