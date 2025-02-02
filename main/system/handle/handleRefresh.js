@@ -60,7 +60,6 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
                 }
             }
         } catch (e) {
-            console.log('there was an error updating data: ' + e)
         }
         return;
     };

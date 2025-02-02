@@ -10,8 +10,6 @@ const fs = require("fs-extra");
 (async function () {
 		try {
             const botID = await api.getCurrentUserID();
-            const threadData = [];
-            global.data.allThreadID.set(botID, threadData);
 			const [threads, users] = await Promise.all([Threads.getAll(), Users.getAll(['userID', 'name', 'data'])]);
             
                 

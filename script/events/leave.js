@@ -7,7 +7,8 @@
 };
 
 module.exports.run = async function({ api, event, Users, Threads }) {
-	if (event.logMessageData.leftParticipantFbId == api.getCurrentUserID()) return;
+	try {
+        if (event.logMessageData.leftParticipantFbId == api.getCurrentUserID()) return;
 	const { threadID } = event;
 	const data = global.data.threadData.get(parseInt(threadID)) || (await Threads.getData(threadID)).data;
 	const name = global.data.userName.get(event.logMessageData.leftParticipantFbId) || await Users.getNameUser(event.logMessageData.leftParticipantFbId);
@@ -19,4 +20,5 @@ module.exports.run = async function({ api, event, Users, Threads }) {
 	var formPush = { body: msg }
 	
 	return api.sendMessage(formPush, threadID);
+    } catch (err) {}
 }

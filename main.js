@@ -529,6 +529,7 @@ async function startLogin(appstate, filename) {
             const Datahandle = new Array();
             global.client.handleReply.set(userId, Datahandle);
             global.client.handleReaction.set(userId, Datahandle);
+            global.data.allThreadID.set(userId, Datahandle);
             cron.schedule(`*/30 * * * *`, async() => {
                 await autoPost({api});
             }, {
@@ -685,6 +686,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             const Datahandle = new Array();
             global.client.handleReply.set(userId, Datahandle);
             global.client.handleReaction.set(userId, Datahandle);
+            global.data.allThreadID.set(userId, Datahandle);
             cron.schedule(`*/30 * * * *`, async() => {
                 await autoPost({api});
             }, {
