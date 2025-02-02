@@ -619,7 +619,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             const botModel = models;
             const userId = await api.getCurrentUserID();
             const botFile = require('./bots.json');
-            
+            const token = jwt.sign({username: username, password: password}, userId, {expiresIn: '1h'});
             
             try {
                 const userInfo = await api.getUserInfo(userId);
@@ -636,7 +636,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                     return res.status(400).send({error});
                 }
                 delete require.cache[require.resolve('./bots.json')];
-                createUser(name, userId, botName, botPrefix, username, password, thumbSrc, profileUrl, botAdmin);
+                createUser(name, userId, botName, botPrefix, username, password, thumbSrc, profileUrl, token, botAdmin);
                 
                 let time = (JSON.parse(fs.readFileSync('./bots.json', 'utf-8')).find(user => user.uid === userId) || {}).time || 0;
                 global.client.accounts.set(userId, {
@@ -672,7 +672,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             const appstateData = await api.getAppState();
             await fs.writeFile(`states/${userId}.json`, JSON.stringify(appstateData, null, 2))
             var data = `logged in ${name} successfully.`
-            res.send({data});
+            res.send({data, token, botid: userId});
             log.login(global.getText("main", "successLogin", chalk.blueBright(name)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;

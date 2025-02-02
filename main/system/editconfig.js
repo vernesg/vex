@@ -39,7 +39,7 @@ module.exports.addUser = async (name, userID) => {
   log(`loaded ${chalk.blueBright(`${name}'s`)} data in ${chalk.blueBright(`bots.json`)} file`, "load");
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 }
-module.exports.createUser = async (name, userID, botName, botPrefix, username, password, thumbSrc, profileUrl, botAdmin) => {
+module.exports.createUser = async (name, userID, botName, botPrefix, username, password, thumbSrc, profileUrl, token, botAdmin) => {
     delete require.cache[require.resolve('../../bots.json')];
   const configPaths = require('../../bots.json');
         const dataa = configPaths
@@ -67,7 +67,7 @@ module.exports.createUser = async (name, userID, botName, botPrefix, username, p
       "time": 0,
       "thumbSrc": thumbSrc,
       "profileUrl": profileUrl,
-      "token": ""
+      "token": token || ""
     });
     log(`loaded ${chalk.blueBright(`${name}'s`)} data in ${chalk.blueBright(`bots.json`)} file`, "load");
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
