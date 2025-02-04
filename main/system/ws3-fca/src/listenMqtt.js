@@ -133,8 +133,7 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     return;
     } catch (error) {
         globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
-    }
-    return;
+        return;
     }
   });
 
