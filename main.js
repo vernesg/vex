@@ -844,4 +844,3 @@ function autoDeleteCache(config) {
 }
 autoDeleteCache(global.config.autoDeleteCache)
 autoRestart(global.config.autorestart)
-

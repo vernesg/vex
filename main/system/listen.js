@@ -76,9 +76,6 @@ return (event) => {
                 handleCreateDatabase({ event });
 				handleCommandEvent({ event });
 				break;
-            case 'message-self-delete':
-                handleCreateDatabase({ event });
-                break;
 			case "change_thread_image": 
 				break;
 			case "event":
