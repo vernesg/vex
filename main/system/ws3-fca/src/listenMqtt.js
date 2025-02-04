@@ -225,8 +225,13 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
   });
 
   mqttClient.on('close', function() {
-    //(function () { globalCallback("Connection closed."); })();
-    // client.end();
+      try {
+          globalCallback({ type: "stop_listen", error: "connection closed" }, null);
+          return client.end();
+      } catch (error) {
+          globalCallback({ type: "stop_listen", error: "connection closed" }, null);
+          return;
+      }
   });
 }
 
