@@ -27,7 +27,7 @@ module.exports.handleEvent = async function({api, event, botname }) {
 
 				try {
 					const attachment = event.messageReply.attachments[0].url;
-					const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(processedAsk)}&url=${encodeURIComponent(attachment)}`);
+					const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(processedAsk)}&imgUrl=${encodeURIComponent(attachment)}`);
 					const reply = res.data.message;
 					return api.sendMessage(reply, event.threadID, event.messageID);
 				} catch (err) {
@@ -49,7 +49,7 @@ module.exports.run = async function({ api, event, args, botname }) {
 	try {
 		try {
 			const attachment = event.messageReply.attachments[0].url;
-			const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(ask)}&url=${encodeURIComponent(attachment)}`);
+			const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(ask)}&imgUrl=${encodeURIComponent(attachment)}`);
 			const reply = res.data.message;
 			return api.sendMessage(reply, event.threadID, event.messageID);
 		} catch (err) {
