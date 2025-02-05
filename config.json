@@ -12,14 +12,14 @@
     "100091459940475"
   ],
   "autorestart": {
-    "status": false,
+    "status": true,
     "time": 180,
     "note": "the system is automatically restarts in 3 hours"
   },
   "autoDeleteCache": {
     "status": true,
-    "time": 10,
-    "note": "auto delete caches in 10 minutes, kindly set the status to true, if you dont want to delete caches, set the status to false."
+    "time": 60,
+    "note": "auto delete caches in 1 hour, kindly set the status to true, if you dont want to delete caches, set the status to false."
   },
   "haspremiumcmd": [],
   "approvedgroups": [],

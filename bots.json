@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "name": "Tom Guitzu",
+    "uid": "61572401956395",
+    "botname": "tom",
+    "prefix": "-",
+    "admins": [],
+    "username": "tom",
+    "password": "09090577409",
+    "time": 0,
+    "thumbSrc": "https://scontent.fmnl8-2.fna.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=cp0_dst-png_s32x32&_nc_cat=1&ccb=1-7&_nc_sid=83c60a&_nc_ohc=7gIifu-CZRIQ7kNvgHi358E&_nc_zt=24&_nc_ht=scontent.fmnl8-2.fna&_nc_gid=AfChA9w7QcZH5R__z17PX6L&oh=00_AYAX8pDqRncEhJ8G-IgcVAM4P9L54i9l_xR04hevn-Kmpw&oe=67CAB43A",
+    "profileUrl": "https://www.facebook.com/profile.php?id=61572401956395",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvbSIsInBhc3N3b3JkIjoiMDkwOTA1Nzc0MDkiLCJpYXQiOjE3Mzg3NTQ1MTIsImV4cCI6MTczODc1ODExMn0.g5TWUYfm4RXeCYDaThIs7GmjbR-8nQ-YVVIP0KtxPyU"
+  }
+]
