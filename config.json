@@ -13,8 +13,8 @@
   ],
   "autorestart": {
     "status": false,
-    "time": 40,
-    "note": "the system is automatically restarts in 40 minutes"
+    "time": 180,
+    "note": "the system is automatically restarts in 3 hours"
   },
   "autoDeleteCache": {
     "status": true,

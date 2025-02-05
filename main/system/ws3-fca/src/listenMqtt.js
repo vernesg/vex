@@ -224,15 +224,7 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
 
   });
 
-  mqttClient.on('close', function() {
-      try {
-          globalCallback({ type: "stop_listen", error: "connection closed" }, null);
-          return client.end();
-      } catch (error) {
-          globalCallback({ type: "stop_listen", error: "connection closed" }, null);
-          return;
-      }
-  });
+  mqttClient.on('close', function() {});
 }
 
 function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
