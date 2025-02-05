@@ -27,11 +27,11 @@ module.exports.handleEvent = async function({api, event, botname }) {
 
 				try {
 					const attachment = event.messageReply.attachments[0].url;
-					const res = await axios.get(`https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(processedAsk)}&uid=${encodeURIComponent(event.senderID)}&imageUrl=${encodeURIComponent(attachment)}`);
+					const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(processedAsk)}&url=${encodeURIComponent(attachment)}`);
 					const reply = res.data.response;
 					return api.sendMessage(reply, event.threadID, event.messageID);
 				} catch (err) {
-					const res = await axios.get(`https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(processedAsk)}&uid=${encodeURIComponent(event.senderID)}&imageUrl=`);
+					const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(processedAsk)}`);
 					const reply = res.data.response;
 					return api.sendMessage(reply, event.threadID, event.messageID);
 				}
@@ -49,11 +49,11 @@ module.exports.run = async function({ api, event, args, botname }) {
 	try {
 		try {
 			const attachment = event.messageReply.attachments[0].url;
-			const res = await axios.get(`https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(ask)}&uid=${encodeURIComponent(event.senderID)}&imageUrl=${encodeURIComponent(attachment)}`);
+			const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(ask)}&url=${encodeURIComponent(attachment)}`);
 			const reply = res.data.response;
 			return api.sendMessage(reply, event.threadID, event.messageID);
 		} catch (err) {
-			const res = await axios.get(`https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(ask)}&uid=${encodeURIComponent(event.senderID)}&imageUrl=`);
+			const res = await axios.get(`https://character.ryukodev.gleeze.com/api?name=gemini&message=${encodeURIComponent(ask)}`);
 			const reply = res.data.response;
 			return api.sendMessage(reply, event.threadID, event.messageID);
 		}
