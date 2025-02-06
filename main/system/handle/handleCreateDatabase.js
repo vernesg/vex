@@ -56,7 +56,7 @@ module.exports = function({
               console.log(e)
             };
           }
-          console.log(global.getText('handleCreateDatabase', 'newThread', '\ngroup id : ' + chalk.white(`${threadID}`) + "\ngroup name : " + chalk.white(`${threadIn4.threadName}`)));
+          console.log(global.getText('handleCreateDatabase', 'newThread', '\ngroup id : ' + chalk.white(`${threadID}`) + "\ngroup name : " + chalk.white(`${threadIn4.threadName || `name doesn't exist`}`)));
       }
       if (!allUserID.includes(senderID) || !userName.has(senderID)) {
         const infoUsers = await Users.getInfo(senderID),

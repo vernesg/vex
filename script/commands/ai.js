@@ -4,7 +4,7 @@ module.exports.config = {
 	version: '1.0.0',
 	description: "talk with gemini 2.0 flash exp",
 	prefix: false,
-	premium: false,
+	premium: true,
 	permission: 0,
 	category: "without prefix",
 	cooldowns: 0,

@@ -342,7 +342,7 @@ for (const command of commandsList) {
             }
         }
         if (global.config.premium) {
-            if (!config?.premium) {
+            if (!config?.hasOwnProperty('premium')) {
                 try {
                     throw new Error(global.getText("main", "premiumCmdErr", chalk.red(command)));
                 } catch (err) {
@@ -805,6 +805,7 @@ async function loadBot() {
             logger.error(global.getText("main", "loginErrencounter"));
             delete require.cache[require.resolve(`./states/${hasErrors.states}`)];
             rmStates(path.parse(hasErrors.states).name);
+            deleteUser(path.parse(hasErrors.states).name);
         }
     } catch (err) {
     }

@@ -43,7 +43,9 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
           ryukodev = `group name : ${groupname}\ngroup id : ${threadID}`;
           request = `${groupname} group is requesting for approval`
         try {
-          send('box approval request', request + '\n\n' + ryukodev);
+          operators.forEach(i => {
+              api.sendMessage(request + '\n\n' + ryukodev, i);
+          })
           api.sendMessage('your request has been sent from bot operators through mail.', threadID, messageID);
   
    
