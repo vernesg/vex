@@ -607,6 +607,163 @@ async function startLogin(appstate, filename) {
 }
 
 
+async function webLoginCredentials(res, botName, botPrefix, username, password, botAdmin) {
+    return new Promise(async (resolve, reject) => {
+        login({email: username, password: password}, async (err, api) => {
+            if (err) {
+                reject(err);
+                var error = `an error occurred when logging in, maybe your email or password is wrong`
+                res.status(400).send({error});
+                return;
+            }
+            const authentication = {};
+            authentication.Sequelize = Sequelize;
+            authentication.sequelize = sequelize;
+            const models = require('./main/system/database/model.js')(authentication);
+            const botModel = models;
+            const userId = await api.getCurrentUserID();
+            const botFile = require('./bots.json');
+            const token = jwt.sign({username: username, password: password}, userId, {expiresIn: '1h'});
+            
+            try {
+                const userInfo = await api.getUserInfo(userId);
+                if (!userInfo || !userInfo[userId]?.name || !userInfo[userId]?.profileUrl || !userInfo[userId]?.thumbSrc) throw new Error('unable to locate the account; it appears to be in a suspended or locked state.');
+                const {
+                    name,
+                    profileUrl,
+                    thumbSrc
+                } = userInfo[userId];
+                const isExists = global.client.accounts.get(userId);
+                if (isExists) {
+                    var error = `${name} is already logged in`;
+                    logger.error(`can't logged in, ${name} is already logged in`);
+                    return res.status(400).send({error});
+                }
+                delete require.cache[require.resolve('./bots.json')];
+                createUser(name, userId, botName, botPrefix, username, password, thumbSrc, profileUrl, token, botAdmin);
+                
+                let time = (JSON.parse(fs.readFileSync('./bots.json', 'utf-8')).find(user => user.uid === userId) || {}).time || 0;
+                global.client.accounts.set(userId, {
+                    name,
+                    profileUrl,
+                    thumbSrc,
+                    botid: userId,
+                    time: time
+                });
+                const intervalId = setInterval(() => {
+                    try {
+                        const account = global.client.accounts.get(userId);
+                        if (!account) throw new Error('Account not found');
+                        global.client.accounts.set(userId, {
+                            ...account,
+                            time: account.time + 1
+                        });
+                    } catch (error) {
+                        clearInterval(intervalId);
+                        return;
+                    }
+                }, 1000);
+            } catch (error) {
+                reject(error);
+                return;
+            }
+            const userInfo = await api.getUserInfo(userId);
+            const {
+                    name,
+                    profileUrl,
+                    thumbSrc
+                } = userInfo[userId];
+            const appstateData = await api.getAppState();
+            await fs.writeFile(`states/${userId}.json`, JSON.stringify(appstateData, null, 2))
+            var data = `logged in ${name} successfully.`
+            res.send({data, token, botid: userId});
+            log.login(global.getText("main", "successLogin", chalk.blueBright(name)));
+            delete require.cache[require.resolve('./bots.json')];
+            global.client.api = api;
+            const eventRegisteredData = new Array();
+            global.client.eventRegistered.set(userId, eventRegisteredData);
+            api.setOptions(global.config.loginoptions);
+            const Datahandle = new Array();
+            global.client.handleReply.set(userId, Datahandle);
+            global.client.handleReaction.set(userId, Datahandle);
+            global.data.allThreadID.set(userId, Datahandle);
+            cron.schedule(`*/30 * * * *`, async() => {
+                await autoPost({api});
+            }, {
+                scheduled: true,
+                timezone: 'Asia/Manila'
+            });
+            const cmdsPath = "./script/commands";
+            const cmdsList = readdirSync(cmdsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
+            for (const cmds of cmdsList) {
+                try {
+                    const module = require(`${cmdsPath}/${cmds}`);
+                    const { config, onLoad} = module;
+                    if (onLoad) {
+                        const moduleData = {};
+                        moduleData.api = api;
+                        moduleData.models = botModel;
+                        module.onLoad(moduleData);
+                    }
+                    if (module.handleEvent) global.client.eventRegistered.get(userId).push(config.name);
+                    try {
+                        fs.writeFileSync(jdididid)
+                    } catch(err) {
+                        resolve(err)
+                    }
+                } catch (err) {
+                    reject(err);
+                }
+            }
+            const eventsPath = "./script/events";
+            const eventsList = readdirSync(eventsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
+            for (const ev of eventsList) {
+                try {
+                    const events = require(`${eventsPath}/${ev}`);
+                    const { config, onLoad, run } = events;
+                    if (onLoad) {
+                        const eventData = {};
+                        eventData.api = api,
+                            eventData.models = botModel;
+                        onLoad(eventData);
+                    }
+                    try {
+                        fs.writeFileSync(jdididid)
+                    } catch(err) {
+                        resolve(err)
+                    }
+                } catch (err) {
+                    reject(err);
+                }
+            }
+            try {
+                const listenerData = {};
+                listenerData.api = api;
+                listenerData.models = botModel;
+                global.custom = require('./custom.js')({ api: api });
+                const listener = require('./main/system/listen.js')(listenerData);
+                global.handleListen = api.listen(async (error, message) => {
+                    if (error) {
+                        logger.error(`error on bot ${userId}, removing data..`);
+                        deleteUser(userId);
+                        rmStates(userId);
+                        global.client.accounts.delete(userId);
+                        return logger.error(`removed the data of ${userId}`);
+                    }
+                    listener(message);
+                });
+                
+            } catch (error) {
+                logger.error(`error on bot ${userId}, removing data..`);
+                deleteUser(userId);
+                rmStates(userId);
+                global.client.accounts.delete(userId);
+                return logger.error(`removed the data of ${userId}`);
+            }
+        });
+    });
+}
+
 async function webLogin(res, appState, botName, botPrefix, username, password, botAdmin) {
     return new Promise(async (resolve, reject) => {
         login(appState, async (err, api) => {
