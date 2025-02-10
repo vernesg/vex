@@ -12,7 +12,7 @@ var allowedProperties = {
   emojiSize: true,
   body: true,
   mentions: true,
-  location: true,
+  location: true
 };
 
 module.exports = function (defaultFuncs, api, ctx) {

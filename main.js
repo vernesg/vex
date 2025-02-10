@@ -252,7 +252,6 @@ try {
     process.exit(0)
 }
 
-// LOAD LANGUAGE
 const langFile = (readFileSync(`${__dirname}/main/utility/languages/${global.config.language}.lang`, {
     encoding: 'utf-8'
 })).split(/\r?\n|\r/);
@@ -284,7 +283,6 @@ global.getText = function(...args) {
 };
 
 
-//ENV CONFIG FILE
 var envconfigValue;
 try {
     const envconfigPath = "./main/config/envconfig.json";
@@ -299,7 +297,6 @@ try {
     process.exit(0)
 }
 
-// GLOBAL NODE MODULES
 const{ Sequelize, sequelize } = require("./main/system/database/index.js");
 const { kStringMaxLength } = require('buffer');
 const { error } = require('console');
@@ -316,7 +313,6 @@ if (!global.config.email) {
     process.exit(0);
 }
 
-// LOAD COMMANDS
 const commandsPath = "./script/commands";
 const commandsList = readdirSync(commandsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
 
@@ -407,8 +403,6 @@ for (const command of commandsList) {
     }
 }
 
-
-// LOAD EVENTS
 const evntsPath = "./script/events";
 const evntsList = readdirSync(evntsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
 console.log(`${chalk.blue(`\n${global.getText("main", "startloadEvnt")}`)}`)
@@ -440,18 +434,19 @@ for (const ev of evntsList) {
     }
 }
 
-//REJECT UNHANDLED REJECTION
 process.on('unhandledRejection', (reason) => {
     console.error(reason);
 });
 
 
-// SEQUELIZE AUTH
 (async() => {
     await sequelize.authenticate();
 })()
+const authentication = {};
+authentication.Sequelize = Sequelize;
+authentication.sequelize = sequelize;
+const models = require('./main/system/database/model.js')(authentication);
 
-// AUTO POST
 async function autoPost({api}) {
     if (global.config.autopost) {
         const date = new Date().getDate();
@@ -470,7 +465,7 @@ async function autoPost({api}) {
         logger(`auto post is turned off.`);
     }
 }
-async function startLogin(appstate, filename) {
+async function startLogin(appstate, filename, callback) {
     return new Promise(async (resolve, reject) => {
         login(appstate, async (err, api) => {
             if (err) {
@@ -479,10 +474,6 @@ async function startLogin(appstate, filename) {
                 rmStates(filename);
                 return;
             }
-            const authentication = {};
-            authentication.Sequelize = Sequelize;
-            authentication.sequelize = sequelize;
-            const models = require('./main/system/database/model.js')(authentication);
             const botModel = models;
             const userId = await api.getCurrentUserID();
             try {
@@ -591,6 +582,7 @@ async function startLogin(appstate, filename) {
                         deleteUser(userId);
                         rmStates(filename);
                         global.client.accounts.delete(userId);
+                        global.data.allThreadID.delete(userId);
                         return logger.error(`removed the data of ${userId}`);
                     }
                     listener(message);
@@ -600,8 +592,10 @@ async function startLogin(appstate, filename) {
                 deleteUser(userId);
                 rmStates(filename);
                 global.client.accounts.delete(userId);
+                global.data.allThreadID.delete(userId);
                 return logger.error(`removed the data of ${userId}`);
             }
+            callback(null, api);
         });
     });
 }
@@ -615,10 +609,6 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                 res.status(400).send({error});
                 return;
             }
-            const authentication = {};
-            authentication.Sequelize = Sequelize;
-            authentication.sequelize = sequelize;
-            const models = require('./main/system/database/model.js')(authentication);
             const botModel = models;
             const userId = await api.getCurrentUserID();
             const botFile = require('./bots.json');
@@ -747,6 +737,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                         deleteUser(userId);
                         rmStates(userId);
                         global.client.accounts.delete(userId);
+                        global.data.allThreadID.delete(userId);
                         return logger.error(`removed the data of ${userId}`);
                     }
                     listener(message);
@@ -757,6 +748,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                 deleteUser(userId);
                 rmStates(userId);
                 global.client.accounts.delete(userId);
+                global.data.allThreadID.delete(userId);
                 return logger.error(`removed the data of ${userId}`);
             }
         });
@@ -771,6 +763,7 @@ async function loadBot() {
     let hasErrors = {
         status: false
     };
+    let userID = "";
     try {
         for (const states of listsAppstates) {
             try {
@@ -790,7 +783,9 @@ async function loadBot() {
                 loginDatas.appState = appstateData;
                 try {
                     log.login(global.getText("main", "loggingIn", chalk.blueBright(path.parse(states).name)));
-                    await startLogin(loginDatas, path.parse(states).name);
+                    await startLogin(loginDatas, path.parse(states).name, async (err, api) => {
+                        userID = await api.getCurrentUserID();
+                    });
                 } catch (err) { 
                     hasErrors.status = true;
                     hasErrors.states = states;
@@ -805,16 +800,14 @@ async function loadBot() {
             logger.error(global.getText("main", "loginErrencounter"));
             delete require.cache[require.resolve(`./states/${hasErrors.states}`)];
             rmStates(path.parse(hasErrors.states).name);
-            deleteUser(path.parse(hasErrors.states).name);
+            deleteUser(userID);
+            global.data.allThreadID.delete(userID);
         }
     } catch (err) {
     }
 }
+loadBot();
 
-loadBot()
-
-
-// AUTO RESTART
 function autoRestart(config) {
     if(config.status) {
         setInterval(async () => {
@@ -822,8 +815,6 @@ function autoRestart(config) {
         }, config.time * 60 * 1000)
     }
 }
-
-// AUTO DELETE CACHE
 function autoDeleteCache(config) {
     if(config.status) {
         setInterval(async () => {
