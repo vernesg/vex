@@ -514,13 +514,12 @@ async function startLogin(appstate, filename, callback) {
             log.login(global.getText("main", "successLogin", chalk.blueBright(filename)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;
-            const eventRegisteredData = new Array();
-            global.client.eventRegistered.set(userId, eventRegisteredData);
+            global.client.eventRegistered.set(userId, new Array());
             api.setOptions(global.config.loginoptions);
             const Datahandle = new Array();
-            global.client.handleReply.set(userId, Datahandle);
-            global.client.handleReaction.set(userId, Datahandle);
-            global.data.allThreadID.set(userId, Datahandle);
+            global.client.handleReply.set(userId, new Array());
+            global.client.handleReaction.set(userId, new Array());
+            global.data.allThreadID.set(userId, new Array());
             cron.schedule(`*/30 * * * *`, async() => {
                 await autoPost({api});
             }, {
@@ -558,7 +557,7 @@ async function startLogin(appstate, filename, callback) {
                     if (onLoad) {
                         const eventData = {};
                         eventData.api = api,
-                            eventData.models = botModel;
+                        eventData.models = botModel;
                         onLoad(eventData);
                     }
                     try {
@@ -669,13 +668,11 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             log.login(global.getText("main", "successLogin", chalk.blueBright(name)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;
-            const eventRegisteredData = new Array();
-            global.client.eventRegistered.set(userId, eventRegisteredData);
+            global.client.eventRegistered.set(userId, new Array());
             api.setOptions(global.config.loginoptions);
-            const Datahandle = new Array();
-            global.client.handleReply.set(userId, Datahandle);
-            global.client.handleReaction.set(userId, Datahandle);
-            global.data.allThreadID.set(userId, Datahandle);
+            global.client.handleReply.set(userId, new Array());
+            global.client.handleReaction.set(userId, new Array());
+            global.data.allThreadID.set(userId, new Array());
             cron.schedule(`*/30 * * * *`, async() => {
                 await autoPost({api});
             }, {
