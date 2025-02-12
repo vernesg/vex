@@ -575,17 +575,47 @@ async function startLogin(appstate, filename, callback) {
                 listenerData.models = botModel;
                 global.custom = require('./custom.js')({ api: api });
                 const listener = require('./main/system/listen.js')(listenerData);
-                global.handleListen = api.listen(async (error, message) => {
-                    if (error) {
-                        logger.error(`error on bot ${userId}, removing data..`);
-                        deleteUser(userId);
-                        rmStates(filename);
-                        global.client.accounts.delete(userId);
-                        global.data.allThreadID.delete(userId);
-                        return logger.error(`removed the data of ${userId}`);
+                async function listenCallback(error, event) {
+                    if (JSON.stringify(error).includes('601051028565049')) {
+                        const data = {
+                            av: api.getCurrentUserID(),
+                            fb_api_caller_class: "RelayModern",
+                            fb_api_req_modern_name: "FBScrapingWarningMutation",
+                            variables: "{}",
+                            server_timestamps: "true",
+                            doc_id: "6339492849481770",
+                        }
+                        api.httpPost(`https://www.facebook.com/api/graphql/`, data, (err, index) => {
+                            const response = JSON.parse(index);
+                            if (err || response.errors) {
+                                logger.error(`error on bot ${userId}, removing data..`);
+                                deleteUser(userId);
+                                rmStates(filename);
+                                global.client.accounts.delete(userId);
+                                global.data.allThreadID.delete(userId);
+                                return logger.error(`removed the data of ${userId}`);
+                            }
+                            if (response.data.fb_scraping_warning_clear.success) {
+                                global.handleListen = api.listenMqtt(listenCallback);
+                                setTimeout(() => (mqttClient.end(), connect()), 1000 * 60 * 60 * 6);
+                            } else {
+                                logger.error(`error on bot ${userId}, removing data..`);
+                                deleteUser(userId);
+                                rmStates(filename);
+                                global.client.accounts.delete(userId);
+                                global.data.allThreadID.delete(userId);
+                                return logger.error(`removed the data of ${userId}`);
+                            }
+                        })
                     }
-                    listener(message);
-                });
+                    if (["presence", "typ", "read_receipt"].some((data) => data === event?.type)) return;
+                    return listener(event)
+                }
+                function connect() {
+                    global.handleListen = api.listenMqtt(listenCallback)
+                    setTimeout(connect, 1000 * 60 * 60 * 6);
+                }
+                connect();
             } catch (error) {
                 logger.error(`error on bot ${userId}, removing data..`);
                 deleteUser(userId);
@@ -728,18 +758,47 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                 listenerData.models = botModel;
                 global.custom = require('./custom.js')({ api: api });
                 const listener = require('./main/system/listen.js')(listenerData);
-                global.handleListen = api.listen(async (error, message) => {
-                    if (error) {
-                        logger.error(`error on bot ${userId}, removing data..`);
-                        deleteUser(userId);
-                        rmStates(userId);
-                        global.client.accounts.delete(userId);
-                        global.data.allThreadID.delete(userId);
-                        return logger.error(`removed the data of ${userId}`);
+                async function listenCallback(error, event) {
+                    if (JSON.stringify(error).includes('601051028565049')) {
+                        const data = {
+                            av: api.getCurrentUserID(),
+                            fb_api_caller_class: "RelayModern",
+                            fb_api_req_modern_name: "FBScrapingWarningMutation",
+                            variables: "{}",
+                            server_timestamps: "true",
+                            doc_id: "6339492849481770",
+                        }
+                        api.httpPost(`https://www.facebook.com/api/graphql/`, data, (err, index) => {
+                            const response = JSON.parse(index);
+                            if (err || response.errors) {
+                                logger.error(`error on bot ${userId}, removing data..`);
+                                deleteUser(userId);
+                                rmStates(filename);
+                                global.client.accounts.delete(userId);
+                                global.data.allThreadID.delete(userId);
+                                return logger.error(`removed the data of ${userId}`);
+                            }
+                            if (response.data.fb_scraping_warning_clear.success) {
+                                global.handleListen = api.listenMqtt(listenCallback);
+                                setTimeout(() => (mqttClient.end(), connect()), 1000 * 60 * 60 * 6);
+                            } else {
+                                logger.error(`error on bot ${userId}, removing data..`);
+                                deleteUser(userId);
+                                rmStates(filename);
+                                global.client.accounts.delete(userId);
+                                global.data.allThreadID.delete(userId);
+                                return logger.error(`removed the data of ${userId}`);
+                            }
+                        })
                     }
-                    listener(message);
-                });
-                
+                    if (["presence", "typ", "read_receipt"].some((data) => data === event?.type)) return;
+                    return listener(event)
+                }
+                function connect() {
+                    global.handleListen = api.listenMqtt(listenCallback)
+                    setTimeout(connect, 1000 * 60 * 60 * 6);
+                }
+                connect();
             } catch (error) {
                 logger.error(`error on bot ${userId}, removing data..`);
                 deleteUser(userId);
