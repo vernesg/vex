@@ -5,7 +5,7 @@ module.exports.config = {
     name: "adminnoti",
     version: "1.0.0",
     permission: 2,
-    credits: "ryuko",
+    credits: "vrax",
     description: "send a notification to all groups",
     prefix: true,
     premium: false,
