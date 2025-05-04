@@ -1,5 +1,5 @@
 {
-  "author": "ryuko",
+  "author": "vrax",
   "language": "english",
   "allowinbox": false,
   "adminonly": false,
@@ -7,9 +7,10 @@
   "approval": false,
   "premium": false,
   "autopost": true,
-  "email": "sanjivfresh@gmail.com",
+  "email": "heroxhonattackz20@gmail.com",
   "operators": [
-    "100070577903608", 100010099516674",
+    "100070577903608",
+    "100010099516674"
   ],
   "autorestart": {
     "status": false,
