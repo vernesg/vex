@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js"
   },
-  "author": "billy",
+  "author": "vern",
   "license": "ISC",
   "dependencies": {
     "@bochilteam/scraper-tiktok": "^5.0.0",
