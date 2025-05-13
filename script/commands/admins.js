@@ -2,7 +2,7 @@ module.exports.config = {
     name: 'admins',
     version: '1.0.0',
     permission: 0,
-    credits: 'ryuko',
+    credits: 'vrax',
     prefix: false,
     premium: false,
     description: 'group administrator list.',
