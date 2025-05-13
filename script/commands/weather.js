@@ -2,7 +2,7 @@ module.exports.config = {
 	name: "weather",
 	version: "1.0.1",
 	permission: 0,
-	credits: "ryuko",
+	credits: "vrax",
 	prefix: false,
 	premium: false,
 	description: "See weather information in the area",
