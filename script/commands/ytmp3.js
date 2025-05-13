@@ -6,9 +6,9 @@ module.exports.config = {
     name: "ytmp3",
     version: "1.0.0",
     permission: 0,
-    credits: "owner",
+    credits: "vrax",
     premium: false,
-    description: "Send Youtube Music",
+    description: "Send YouTube Music",
     prefix: false,
     category: "without prefix",
     usages: `ytmp3 [music title]`,
@@ -19,49 +19,59 @@ module.exports.config = {
     }
 };
 
-module.exports.run = async function({ api, event, args }) {
-    const chilli = args.join(' ');
-    if (!chilli) {
-        return api.sendMessage('Please provide a song, for example: ytmp3 Selos', event.threadID, event.messageID);
+module.exports.run = async function ({ api, event, args }) {
+    const query = args.join(' ');
+    if (!query) {
+        return api.sendMessage('Please provide a song title, e.g. ytmp3 Selos', event.threadID, event.messageID);
     }
-    const apiUrl1 = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(chilli)}`;
-    try {
-    const response1 = await axios.get(apiUrl1);
-    const data1 = response1.data;
-    const yturl = data1[0].url;
-    const channel = data1[0].channelName;
-    
-        const apiUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(yturl)}`;
-    
-        const response = await axios.get(apiUrl);
-        const maanghang = response.data;
 
-        if (!maanghang || !maanghang.audio) {
-            return api.sendMessage('No song found for your search. Please try again with a different query.', event.threadID, event.messageID);
+    const searchApi = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
+
+    try {
+        const searchRes = await axios.get(searchApi);
+        const data = searchRes.data;
+
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            return api.sendMessage('No results found. Try a different song name.', event.threadID, event.messageID);
         }
-        const bundat = maanghang.audio;
-        const fileName = `${maanghang.title}.mp3`;
-        const filePath = path.join(__dirname, fileName);
-        const downloadResponse = await axios({
+
+        const videoUrl = data[0].url;
+        const channelName = data[0].channelName;
+
+        const downloadApi = `https://kaiz-apis.gleeze.com/api/ytmp3?url=${encodeURIComponent(videoUrl)}`;
+        const downloadRes = await axios.get(downloadApi);
+        const audioData = downloadRes.data;
+
+        if (!audioData || !audioData.audio) {
+            return api.sendMessage('Unable to download audio. Please try another song.', event.threadID, event.messageID);
+        }
+
+        const audioUrl = audioData.audio;
+        const sanitizedTitle = audioData.title.replace(/[\\/:*?"<>|]/g, '');
+        const filePath = path.join(__dirname, `${sanitizedTitle}.mp3`);
+
+        const audioStream = await axios({
             method: 'GET',
-            url: bundat,
-            responseType: 'stream',
+            url: audioUrl,
+            responseType: 'stream'
         });
+
         const writer = fs.createWriteStream(filePath);
-        downloadResponse.data.pipe(writer);
+        audioStream.data.pipe(writer);
+
         writer.on('finish', async () => {
-            api.sendMessage(`title: ${maanghang.title}\n\ndownload link: ${maanghang.audio}\n\nuploader: ${channel}`, event.threadID, event.messageID);
-            api.sendMessage({
-                attachment: fs.createReadStream(filePath)
-            }, event.threadID, () => {
+            await api.sendMessage(`Title: ${audioData.title}\nUploader: ${channelName}`, event.threadID);
+            api.sendMessage({ attachment: fs.createReadStream(filePath) }, event.threadID, () => {
                 fs.unlinkSync(filePath);
             }, event.messageID);
         });
+
         writer.on('error', () => {
-            api.sendMessage('There was an error downloading the file. Please try again later.', event.threadID, event.messageID);
+            api.sendMessage('Error saving the audio file.', event.threadID, event.messageID);
         });
-    } catch (pogi) {
-        console.error('Error fetching song:', pogi);
-        api.sendMessage('An error occurred while fetching the song. Please try again later.', event.threadID, event.messageID);
+
+    } catch (err) {
+        console.error('Error:', err.message || err);
+        api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
     }
 };
