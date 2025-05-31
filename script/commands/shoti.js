@@ -1,58 +1,51 @@
 const axios = require('axios');
-const { sendMessage } = require('../handles/sendMessage');
+const path = require('path');
+const fs = require('fs-extra');
 
-module.exports = {
-  name: 'shoti',
-  description: 'Fetch a random Shoti video.',
-  usage: 'shoti',
-  author: 'Akimitsu',
 
-  async execute(senderId, args, pageAccessToken) {
-    await sendMessage(
-      senderId,
-      { text: '🎬 𝗙𝗲𝘁𝗰𝗵𝗶𝗻𝗴 𝗮 𝗿𝗮𝗻𝗱𝗼𝗺 𝘀𝗵𝗼𝘁𝗶 𝘃𝗶𝗱𝗲𝗼, 𝗽𝗹𝗲𝗮𝘀𝗲 𝘄𝗮𝗶𝘁...' },
-      pageAccessToken
-    );
-
-    try {
-      const response = await axios.get('https://shoti.fbbot.org/api/get-shoti?type=video', {
-        headers: {
-          apikey: 'YOUR_API_KEY', // insert ur apikey $shoti-xxxx at https://shoti.fbbot.org
-        },
-      });
-
-      const data = response.data?.result;
-
-      if (!data || !data.content) {
-        return sendMessage(
-          senderId,
-          { text: '❌ 𝗙𝗮𝗶𝗹𝗲𝗱 𝘁𝗼 𝗳𝗲𝘁𝗰𝗵 𝗮 𝗦𝗵𝗼𝘁𝗶 𝘃𝗶𝗱𝗲𝗼. 𝗣𝗹𝗲𝗮𝘀𝗲 𝘁𝗿𝘆 𝗮𝗴𝗮𝗶𝗻 𝗹𝗮𝘁𝗲𝗿.' },
-          pageAccessToken
-        );
-      }
-
-      await sendMessage(
-        senderId,
-        {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: data.content,
-            },
-          },
-        },
-        pageAccessToken
-      );
-    } catch (error) {
-      console.error('Error fetching Shoti video:', error);
-      await sendMessage(
-        senderId,
-        {
-          text: '🚫 𝗘𝗿𝗿𝗼𝗿 𝗳𝗲𝘁𝗰𝗵𝗶𝗻𝗴 𝗦𝗵𝗼𝘁𝗶 𝘃𝗶𝗱𝗲𝗼. 𝗧𝗿𝘆 𝗮𝗴𝗮𝗶𝗻 𝗹𝗮𝘁𝗲𝗿.',
-        },
-        pageAccessToken
-      );
-    }
-  },
+module.exports.config = {
+    name: "shoti",
+    version: "1.0.0",
+    permission: 0,
+    description: "random video from Shoti API By Lib API",
+    prefix: false,
+    premium: false,
+    credits: "Jonell Magallanes",
+    cooldowns: 10,
+    category: "media"
 };
-// Ako importante potah? Manuelson Yasis Hacker
+
+module.exports.run = async function ({ api, event }) {
+    try {
+        const response = await axios.get('https://kaiz-apis.gleeze.com/api/shoti');
+        const data = response.data.shoti;
+        const fileName = `${event.messageID}.mp4`;
+        const filePath = path.join(__dirname, fileName);
+
+            const { videoUrl, title, username, nickname, region } = data;
+
+            const downloadResponse = await axios({
+            method: 'GET',
+            url: videoUrl,
+            responseType: 'stream',
+        });
+        const writer = fs.createWriteStream(filePath);
+        downloadResponse.data.pipe(writer);
+        writer.on('finish', async () => {
+            api.sendMessage({
+                body: `title : ${title}\nusername : ${username}\nnickname: ${nickname}\nregion : ${region}\n`,
+                attachment: fs.createReadStream(filePath)
+            }, event.threadID, () => {
+                fs.unlinkSync(filePath);
+            }, event.messageID);
+        });
+        writer.on('error', () => {
+            api.sendMessage('There was an error downloading the file. Please try again later.', event.threadID, event.messageID);
+        })
+
+
+    } catch (error) {
+        console.error('Error fetching video:', error);
+        api.sendMessage(error.message, event.threadID, event.messageID);
+    }
+};
